@@ -1,0 +1,47 @@
+.banner {
+    /* display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .banner2 {
+        flex: 50%;
+    }
+    .banner2, .banner3 {
+        flex: 0 0 50%; 
+    }*/
+    --gap: 15px;
+    --num-cols: 3;
+    --row-height: 200px;
+
+    box-sizing: border-box;
+
+    display: grid;
+    grid-template-columns: repeat(var(--num-cols), 1fr);
+    grid-auto-rows: var(--row-height);
+    gap: var(--gap);
+
+    >div {
+        height: 100%;
+        width: 100%;
+        >img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .banner1 {
+        grid-column: span 2;
+        grid-row: span 2;
+    }
+
+    @media screen and (max-width: 1150px) {
+		--row-height: 150px;
+        --num-cols: 2;
+    }
+
+    @media screen and (max-width: 700px) {
+		--row-height: 100px;
+        --gap: 10px;
+        --num-cols: 3;
+    }
+}

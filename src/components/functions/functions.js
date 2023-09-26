@@ -1,0 +1,3 @@
+export const dot3digits = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};

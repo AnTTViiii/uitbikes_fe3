@@ -1,0 +1,31 @@
+.footer {
+    display: grid;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    color: black;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    >div {
+        padding: 15px;
+        >h2 {
+            padding: 0;
+            margin-block: 0 !important;
+            color: #ce252a;
+        }
+        display: flex;
+        flex-direction: column;
+
+    }
+    .hr {
+        width: 20px ;
+        border: 2px solid #ce252a ;
+        border-radius: 5px ;
+        background-color: #ce252a ;
+        margin-bottom: 5px;
+    }
+    .copyright {
+        position: relative;
+        bottom: 15px;
+        left: 15px;
+        color: #14185e;
+    }
+}

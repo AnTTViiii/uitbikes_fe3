@@ -1,0 +1,37 @@
+.main {
+    overflow-x: hidden;
+    max-width: 1290px;
+    width: 100%;
+    margin: auto;
+    .main-content {
+        min-height: 100vh;
+        transition: all 0.5s ease-in-out;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+
+        .outlet, .footer {
+            transition: all 0.3s ease-in-out;
+            position: relative;
+            top: 5.5rem;
+        }
+        .outlet-nav-open, .footer-nav-open {
+            top: 210px;
+        }
+        .outlet {
+            padding: 20px;
+            @media screen and (max-width: 700px) {
+                padding: 15px;
+            }
+        }
+        .footer {
+            margin-top: auto;
+        }
+
+        @media screen and (max-width: 700px) {
+            /* position: relative; */
+            background-color: white;
+            z-index: 100;
+        }
+    }
+}
