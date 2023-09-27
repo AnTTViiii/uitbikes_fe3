@@ -3,6 +3,7 @@ import { ShoppingCartRounded } from '@mui/icons-material';
 import './product-item.css'
 import { IconButton } from '@mui/material';
 import { dot3digits } from '../functions/functions'
+import { Link } from 'react-router-dom';
 
 const ProductItem = ({item}) => {
   return (
@@ -13,7 +14,7 @@ const ProductItem = ({item}) => {
             <img src={d.image} alt={item.name} />
           </div>
           <div className="product-item-txt">
-            <h3>{item.name}</h3>
+            <h3><Link to={`/product/${item.p_id}`}>{item.name}</Link></h3>
             <p>{dot3digits(d.price)} vnđ</p>
             <IconButton className='shopping-icon'>
               <ShoppingCartRounded />
