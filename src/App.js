@@ -7,9 +7,9 @@ import Cart from './pages/Cart';
 import ChangePassword from './pages/ChangePassword';
 import ChargeRequest from './pages/ChargeRequest';
 import EditProfile from './pages/EditProfile';
-import EInvoice from './pages/EInvoice';
+import PurchaseOrder from './pages/PurchaseOrder';
 import Notification from './pages/Notification';
-import Profile from './pages/Profile';
+import User from './pages/User';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import Signin from './pages/Signin';
@@ -21,18 +21,20 @@ function App() {
       <Routes>
         <Route path='/' element={<MainLayout />} >
           <Route index element={<Home />} />
+          <Route path='product/*' element={<ProductDetail />} />
           <Route path='about' element={<About />} />
           <Route path='register' element={<Register />} />
           <Route path='signin' element={<Signin />} />
-          <Route path='profile' element={<Profile />} />
           <Route path='cart' element={<Cart />} />
           <Route path='notify' element={<Notification />} />
-          <Route path='profile/edit' element={<EditProfile />} />
-          <Route path='profile/changepw' element={<ChangePassword />} />
-          <Route path='profile/charge' element={<ChargeRequest />} />
-          <Route path='product/*' element={<ProductDetail />} />
-          <Route path='invoices' element={<EInvoice />} />
+          <Route path='user' element={<User />} />
+          <Route path='user/edit' element={<User />} />
+          <Route path='user/password' element={<User />} />
+          <Route path='user/charge' element={<User />} />
+          <Route path='user/purchase' element={<User />} />
+          <Route path='user/transaction' element={<User />} />
           <Route path='resetpw' element={<ResetPassword />} />
+          <Route path='*' element={<Home />} />
         </Route>
       </Routes>
     </BrowserRouter>

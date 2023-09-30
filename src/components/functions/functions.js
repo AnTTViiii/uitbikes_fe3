@@ -24,3 +24,9 @@ export const getBrandName = (x) => {
     }
     return brand;
 };
+
+export const getItemQuantity = (item) => {
+    let qty = 0;
+    item.map((i) => (qty += i.quantity));
+    return qty;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import ProductData from './ProductData'
+import ProductData from '../Data/Product'
 import { getTypeName, getBrandName, dot3digits } from '../functions/functions'
 import './product-detail.css'
 
@@ -27,12 +27,14 @@ const ProductDetail = () => {
     setCount(count);
   }
 
+  const [colorSelected, setColorSelected] = useState(0);
+
   return (
     ProductData.map((i) => i.p_id === id && (
       <div className='product-detail'>
         <div className="product-detail-img">
           {
-            i.detail.map((item, index) => index === 0 && (
+            i.detail.map((item, index) => index === colorSelected && (
               <img src={item.image} alt={i.name} />
             ))
           } 
@@ -40,20 +42,23 @@ const ProductDetail = () => {
         <div className="product-detail-title">
           <h3>{i.name}</h3>
           {
-            i.detail.map((item, index) => index === 0 && (
+            i.detail.map((item, index) => index === colorSelected && (
               <p>{dot3digits(item.price)} đ</p>
             ))
           }
           <div className="product-color">
             {
-              i.detail.map((item) => (
-                <div className='color'>{item.color}</div>
+              i.detail.map((item, index) => (
+                <div className={`color ${colorSelected === index ? ' active' : ''}`} 
+                    onClick={(e) => {setColorSelected(index)}}>
+                  {item.color}
+                </div>
               ))
             }
           </div>
           <div className="product-quantity">
             {
-              i.detail.map((item, index) => index === 0 && (
+              i.detail.map((item, index) => index === colorSelected && (
                 <><p>Kho: {item.quantity}</p>
                 <div className="counter">
                   <div onClick={decrementCount}>-</div>

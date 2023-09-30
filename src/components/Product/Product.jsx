@@ -1,5 +1,5 @@
 import React from 'react'
-import ProductData from './ProductData';
+import ProductData from '../Data/Product';
 import ProductItem from './ProductItem';
 import './product.css'
 

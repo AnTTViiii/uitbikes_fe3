@@ -32,7 +32,7 @@ const NavItem = [
         text: 'Thông báo'
     },
     {
-        link: '',
+        link: '/user',
         section: 'user',
         icon: <AccountCircle />,
         text: 'username'

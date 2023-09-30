@@ -3,19 +3,21 @@ import { Link, useLocation } from 'react-router-dom'
 import logo from '../../assets/images/uit_bikes_logo.svg';
 import NavItem from './NavItem';
 import './navigation.css'
-import { IconButton, Paper, InputBase } from '@mui/material';
-import { Search, Tune, Menu, Clear, Logout } from '@mui/icons-material';
+import { IconButton, Paper, InputBase, Badge } from '@mui/material';
+import { Search, Tune, Menu, Clear } from '@mui/icons-material';
+import { getItemQuantity } from '../functions/functions';
+import Cart from '../Data/Cart';
 
 const Navigation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [toggle, setToggle] = useState(1);
     const location = useLocation();
-    const isLogin = 0;
+    const isLogin = 1;
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1];
         const activeItem = NavItem.findIndex(item => item.section === curPath);
 
-        setActiveIndex(curPath.length === 0 ? 0 : activeItem);
+        setActiveIndex(curPath.length === 0 ? -1 : activeItem);
     }, [location]);
 
     const openMenu = () => {
@@ -76,9 +78,21 @@ const Navigation = () => {
                                 className={`nav-menu-item ${activeIndex === index && 'active'}`}
                                 onClick={closeMenu}
                             >
-                                <div className="nav-menu-item-icon">
-                                    {nav.icon}
-                                </div>
+                                {
+                                    nav.section === 'cart' ? 
+                                    (
+                                        <Badge badgeContent={getItemQuantity(Cart)} color='error'>
+                                            <div className="nav-menu-item-icon">
+                                                {nav.icon}
+                                            </div>
+                                        </Badge>
+                                    ) : 
+                                    (
+                                        <div className="nav-menu-item-icon">
+                                            {nav.icon}
+                                        </div>
+                                    )
+                                }
                                 <div className="nav-menu-item-txt">
                                     {index === 4 ? nav.text : ''}
                                 </div>

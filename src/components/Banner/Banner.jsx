@@ -11,7 +11,7 @@ const Banner = () => {
         <img src='https://res.cloudinary.com/dpwehcnso/image/upload/v1695551707/uitbikes/banner2_zl6fom.png' alt='banner2' />
       </div>
       <div className="banner3">
-        <img src='https://res.cloudinary.com/dpwehcnso/image/upload/v1695551706/uitbikes/banner3_e4i2r3.png' alt='banner3' />
+        <img src='https://res.cloudinary.com/dpwehcnso/image/upload/v1695905841/uitbikes/banner3_hczxnd.png' alt='banner3' />
       </div>
     </div>
   )
