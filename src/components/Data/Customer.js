@@ -24,8 +24,85 @@ export const Account = {
 
 export const ChargeRequest = [
     {
-        charge_id: 1,
-        
+        id: 1,
+        customer_id: 1,
+        date: '2022-3-25',
+        account_number: '0987654321',
+        status: 1,
+        money: 1000000000
+    },
+    {
+        id: 2,
+        customer_id: 1,
+        date: '2023-9-14',
+        account_number: '0987654321',
+        status: 1,
+        money: 50000000
+    },
+    {
+        id: 2,
+        customer_id: 1,
+        date: '2023-11-25',
+        account_number: '0987654321',
+        status: 1,
+        money: 35000000
+    }
+]
 
+export const Invoice = [
+    {
+        invoice_id: 1,
+        date: '2022-8-11',
+        customer_id: 1,
+        total: 31549999,
+        status: 3,
+        details: [
+            {p_id: 1}
+        ]
+    },
+    {
+        invoice_id: 2,
+        date: '2022-2-8',
+        customer_id: 1,
+        total: 130599000,
+        status: 2,
+        details: [
+            {p_id: 3},
+            {p_id: 4}
+        ]
+    },
+    {
+        invoice_id: 3,
+        date: '2023-9-22',
+        customer_id: 1,
+        total: 64250000,
+        status: 2,
+        details: [
+            {p_id: 2},
+            {p_id: 5}
+        ]
+    },
+    {
+        invoice_id: 4,
+        date: '2023-10-3',
+        customer_id: 1,
+        total: 34259000,
+        status: 1,
+        details: [
+            {p_id: 7},
+            {p_id: 5}
+        ]
+    },
+    {
+        invoice_id: 5,
+        date: '2023-10-25',
+        customer_id: 1,
+        total: 32000000,
+        status: 0,
+        details: [
+            {p_id: 2},
+            {p_id: 4},
+            {p_id: 8}
+        ]
     }
 ]

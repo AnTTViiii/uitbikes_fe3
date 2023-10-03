@@ -1,36 +1,10 @@
 import React from 'react'
+import AboutUs from '../components/AboutUs/AboutUs'
 
 const About = () => {
   return (
     <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      
-    </div>
-    </div>
-    </div>
-    </div>
-    gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      <div className='about'>
-      gakygfftgyuhyftghgyuhgy
-      
-    </div>
-    </div>
-    </div>
-    </div>
+      <AboutUs />
     </div>
   )
 }

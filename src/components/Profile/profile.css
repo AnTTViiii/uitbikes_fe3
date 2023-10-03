@@ -4,7 +4,7 @@
 
     .profile-sidebar {
         width: 20%;
-        min-width: fit-content;
+        min-width: 169px;
         /* background-color: #f5f5f5; */
         .profile-sidebar-page {
             padding: 10px 20px;

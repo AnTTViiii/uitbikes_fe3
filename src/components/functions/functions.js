@@ -30,3 +30,26 @@ export const getItemQuantity = (item) => {
     item.map((i) => (qty += i.quantity));
     return qty;
 }
+
+export const getInvoiceStatusName = (status) => {
+    let name = '';
+    switch(status) {
+        case 0: name = "Chờ xác nhận"; break;
+        case 1: name = "Đang giao"; break;
+        case 2: name = "Đã giao"; break;
+        case 3: name = "Đã hủy"; break;
+        default: break;
+    }
+    return name;
+}
+
+export const getChargeRequestStatusName = (status) => {
+    let name = '';
+    switch(status) {
+        case 0: name = "Chờ xác nhận"; break;
+        case 1: name = "Đã duyệt"; break;
+        case 2: name = "Từ chối"; break;
+        default: break;
+    }
+    return name;
+}

@@ -4,16 +4,16 @@ import { Button } from '@mui/material'
 import './user-profile.css'
 
 const UserProfile = () => {
-  const [image, setImage] = useState(Account.avatar);
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
-    }
-  }
+  // const [image, setImage] = useState(Account.avatar);
+  // const onImageChange = (event) => {
+  //   if (event.target.files && event.target.files[0]) {
+  //     setImage(URL.createObjectURL(event.target.files[0]));
+  //   }
+  // }
   return (
     <div className='user-profile'>
       <div className="user-profile-left">
-        <img src={image} alt={Account.username} className="user-avatar" />
+        <img src={Account.avatar} alt={Account.username} className="user-avatar" />
         {/* <Button variant="contained" component="label" className='imagePicker'>
           Thay đổi avatar
           <input accept="image/*" onChange={onImageChange} 

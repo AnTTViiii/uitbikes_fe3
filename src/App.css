@@ -84,3 +84,7 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+pre {
+  font-family: Arial, Helvetica, sans-serif;
+}

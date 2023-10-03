@@ -1,0 +1,21 @@
+.about-us {
+    >h2 {
+        color: #ce252a;
+    }
+    >p {
+        text-align: justify;
+    }
+    .about-feature {
+        margin: 20px 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+        gap: 15px 20px;
+        >div {
+            display: flex;
+            gap: 20px;
+            >div>p:nth-child(1) {
+                font-weight: 700;
+            }
+        }
+    }
+}
