@@ -24,6 +24,7 @@
             position: absolute;
             right: 15px;
             display: none;
+            cursor: pointer;
             @media screen and (max-width: 700px) {
                 display: block;
             }

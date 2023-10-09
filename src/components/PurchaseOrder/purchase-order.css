@@ -1,0 +1,87 @@
+.purchase-order {
+    .order-status-tab {
+        display: flex;
+        background-color: #f5f5f5;
+        overflow-x: scroll;
+        >div {
+            flex: 1 1 0;
+            min-width: fit-content;
+            text-align: center;
+            padding: 10px 15px;
+            cursor: pointer;
+            &:hover, &.active {
+                border-bottom: 2px solid #ce252a;
+                border-radius: 2px;
+            }
+        }
+    }
+
+    .order-list {
+        >div {
+            margin: 15px 0;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            border-radius: 0 0 10px 10px;
+            overflow: scroll;
+            .order-status {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid silver;
+                align-items: center;
+                padding: 5px 10px;
+                >p:nth-child(1) {
+                    font-weight: 700;
+                }
+                >p:nth-child(2) {
+                    background-color: #f5f5f5;
+                    padding: 5px 10px 3px 10px;
+                    border-radius: 8px;
+                }
+            }
+            .order-products {
+                border-bottom: 1px solid #f5f5f5;
+                margin-bottom: 10px;
+                padding: 5px 10px;
+
+                .order-product {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: 1px solid silver;
+                    
+                    >img {
+                        width: 70px;
+                        height: 70px;
+                        border: 1px solid silver;
+                        object-fit: contain;
+                    }
+
+                    >div {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        width: 100%;
+                        >div {
+                            padding: 5px 15px;
+                            >p:nth-child(2) {
+                                color: gray;
+                            }
+                        }
+                    }
+
+                    .order-product-price {
+                        color: #ce252a;
+                    }
+                }
+                .order-total {
+                    margin: 20px 0;
+                    display: block;
+                    text-align: right;
+                    
+                    >span {
+                        color: #ce252a;
+                        font-size: large;
+                    }
+                }
+            }
+        }
+    }
+}

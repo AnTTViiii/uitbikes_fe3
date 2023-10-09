@@ -1,4 +1,11 @@
 .about-us {
+    .about-us-heading {
+        text-transform: uppercase;
+        font-size: 1.8rem;
+        color: #ce252a;
+        text-align: center;
+        margin: 15px auto 35px auto;
+    }
     >h2 {
         color: #ce252a;
     }

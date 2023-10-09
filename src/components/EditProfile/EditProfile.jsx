@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Customer, { Account } from '../Data/Customer'
 import { Button } from '@mui/material'
+import './edit-profile.css'
 
 const EditProfile = () => {
   const [image, setImage] = useState(Account.avatar);
@@ -10,6 +11,8 @@ const EditProfile = () => {
     }
   }
   return (
+    <>
+    <h3>Chỉnh sửa hồ sơ</h3>
     <div className='edit-profile'>
       <div className="edit-profile-left">
         <img src={image} alt={Account.username} className="user-avatar" />
@@ -24,8 +27,10 @@ const EditProfile = () => {
         <p>Email: <span>{Account.email}</span></p>
         <p>Tên khách hàng: <input type='text' defaultValue={Customer.name} /></p>
         <p>Giới tính: 
-          <input type='radio' name="gender" value={1} defaultChecked={Customer.gender === 1 ? true : false} />Nữ 
-          <input type='radio' name="gender" value={0} defaultChecked={Customer.gender === 0 ? true : false}/>Nam 
+          <div>
+            <input type='radio' name="gender" value={1} defaultChecked={Customer.gender === 1 ? true : false} />Nữ 
+            <input type='radio' name="gender" value={0} defaultChecked={Customer.gender === 0 ? true : false}/>Nam 
+          </div>
         </p>
         <p>Ngày sinh: <input type='date' defaultValue={Customer.dob} /></p>
         <p>SĐT: <input type='text' defaultValue={Customer.phone} /></p> 
@@ -35,6 +40,7 @@ const EditProfile = () => {
         </Button>
       </div>
     </div>
+    </>
   )
 }
 

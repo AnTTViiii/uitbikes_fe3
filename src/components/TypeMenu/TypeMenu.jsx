@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './type-menu.css'
-import TypeList from './TypeList';
-import Product from '../Product/Product';
+import TypeList from './TypeList'
+
 const TypeMenu = ({getType}) => {
+    const [menu, setMenu] = useState(0);
+
     return (
         <div className='type-menu'>
         {TypeList.map((item, index) => 
-            <div className="type-menu-item" onClick={() => getType(item.type)}>
+            <div className={`type-menu-item ${menu === index ? ' active' : ''}`} 
+                onClick={() => {getType(item.type); setMenu(index)}}>
                 <div className="type-menu-item-icon">
                     {item.icon}
                 </div>

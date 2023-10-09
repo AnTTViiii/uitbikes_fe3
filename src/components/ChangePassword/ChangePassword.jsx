@@ -1,7 +1,7 @@
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
 import React, { useState } from 'react'
-
+import './change-password.css'
 const ChangePassword = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -13,7 +13,7 @@ const ChangePassword = () => {
   return (
     <div className='change-password'>
       <h3>Đổi mật khẩu</h3>
-      <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
+      <FormControl sx={{ m: 0.8 }} fullWidth variant="outlined">
         <InputLabel htmlFor="outlined-adornment-password">Mật khẩu cũ</InputLabel>
         <OutlinedInput
           id="outlined-adornment-password"
@@ -22,7 +22,7 @@ const ChangePassword = () => {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => handleClickShowPassword}
+                onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
@@ -42,7 +42,7 @@ const ChangePassword = () => {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => handleClickShowPassword}
+                onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >
@@ -62,7 +62,7 @@ const ChangePassword = () => {
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
-                onClick={() => handleClickShowPassword}
+                onClick={handleClickShowPassword}
                 onMouseDown={handleMouseDownPassword}
                 edge="end"
               >

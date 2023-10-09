@@ -1,30 +1,15 @@
 import React, { useState } from 'react'
 import { Invoice } from '../Data/Customer'
 import Cart from '../Data/Cart'
-import { getInvoiceStatusName } from '../functions/functions'
-
+import { dot3digits, getInvoiceStatusName } from '../functions/functions'
+import './purchase-order.css'
 const PurchaseOrder = () => {
   const orderStatus = [
-    {
-      id: 0,
-      name: 'Tất cả'
-    },
-    {
-      id: 1,
-      name: 'Chờ xác nhận'
-    },
-    {
-      id: 2,
-      name: 'Đang giao'
-    },
-    {
-      id: 3,
-      name: 'Đã giao'
-    },
-    {
-      id: 4,
-      name: 'Đã hủy'
-    }
+    { name: 'Tất cả' },
+    { name: 'Chờ xác nhận' },
+    { name: 'Đang giao' },
+    { name: 'Đã giao' },
+    { name: 'Đã hủy' }
   ]
   const [tab, setTab] = useState(0);
   const products = [];
@@ -33,6 +18,7 @@ const PurchaseOrder = () => {
   ))
   return (
     <div className='purchase-order'>
+      <h3>Đơn mua</h3>
       <div className="order-status-tab">
         {orderStatus.map((item, index) => (
           <div className={tab === index ? 'active' : ''} onClick={()=>setTab(index)}>
@@ -61,15 +47,20 @@ const OrderDetail = ({item}) => {
       <div className="order-products">
         {item.details.map((item, index) => index < 3 && (
           Cart.map((product) => product.product.p_id === item.p_id && (
-            <><img src={product.product.image} alt={product.product.name} />
-            <div>
-              <p>{product.product.name}</p>
-              <p>{product.product.color}</p>
-              <p>x{product.quantity}</p>
+            <div className='order-product'>
+              <img src={product.product.image} alt={product.product.name} />
+              <div>
+                <div>
+                  <p>{product.product.name}</p>
+                  <p>Màu: {product.product.color}</p>
+                  <p>x{product.quantity}</p>
+                </div>
+                <div className='order-product-price'>{dot3digits(product.product.price)} đ</div>
+              </div>
             </div>
-            <div>{product.product.price}</div></>
           ))
         ))}
+        <div className='order-total'>Thành tiền: <span>{dot3digits(item.total)} đ </span></div>
       </div>
     </div>
   )

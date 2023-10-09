@@ -4,16 +4,13 @@ import MainLayout from './layout/MainLayout';
 import Home from './pages/Home';
 import About from './pages/About';
 import Cart from './pages/Cart';
-import ChangePassword from './pages/ChangePassword';
-import ChargeRequest from './pages/ChargeRequest';
-import EditProfile from './pages/EditProfile';
-import PurchaseOrder from './pages/PurchaseOrder';
 import Notification from './pages/Notification';
 import User from './pages/User';
 import Register from './pages/Register';
 import ResetPassword from './pages/ResetPassword';
 import Signin from './pages/Signin';
 import ProductDetail from './components/Product/ProductDetail';
+import SearchResult from './pages/SearchResult';
 
 function App() {
   return (
@@ -34,6 +31,7 @@ function App() {
           <Route path='user/purchase' element={<User />} />
           <Route path='user/transaction' element={<User />} />
           <Route path='resetpw' element={<ResetPassword />} />
+          <Route path='search' element={<SearchResult />} />
           <Route path='*' element={<Home />} />
         </Route>
       </Routes>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import queryString from 'query-string'
 import logo from '../../assets/images/uit_bikes_logo.svg';
 import NavItem from './NavItem';
 import './navigation.css'
@@ -12,7 +13,8 @@ const Navigation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [toggle, setToggle] = useState(1);
     const location = useLocation();
-    const isLogin = 1;
+    const navigate = useNavigate();
+    const isLogin = 0;
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1];
         const activeItem = NavItem.findIndex(item => item.section === curPath);
@@ -33,6 +35,14 @@ const Navigation = () => {
         document.querySelector('#outlet').classList.remove('outlet-nav-open');
         document.querySelector('#footer').classList.remove('footer-nav-open');
     }
+
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const query = queryString.stringify({ s: searchTerm });
+        navigate(`search?${query}`);
+    };
     return (
         <div id='nav' className='nav'>
             <div className='nav-logo'>
@@ -43,7 +53,7 @@ const Navigation = () => {
                     {toggle ? <Menu onClick={openMenu} /> : <Clear onClick={closeMenu}/>}
                 </div>
             </div>
-            <Paper component="form" className='nav-search'
+            <Paper component="form" className='nav-search' onSubmit={handleSubmit}
                 sx={{ p: '2px 3px', display: 'flex', alignItems: 'center', width: '100%' }}
             >
                 <IconButton sx={{ p: '10px', color: '#2b2b37' }} aria-label="filter">
@@ -52,9 +62,11 @@ const Navigation = () => {
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Nhập từ khóa tìm kiếm..."
-                    inputProps={{ 'aria-label': 'keyword' }} 
+                    inputProps={{ 'aria-label': 'keyword' }}
+                    type="text" value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <IconButton type="button" sx={{ p: '10px', color: '#2b2b37', marginLeft: 'auto' }} aria-label="search">
+                <IconButton type="submit" sx={{ p: '10px', color: '#2b2b37', marginLeft: 'auto' }} aria-label="search" >
                     <Search />
                 </IconButton>
             </Paper>
@@ -64,7 +76,7 @@ const Navigation = () => {
                         NavItem.map((nav, index) => ( index < 2 &&
                             <Link to={nav.link} key={`nav-${index}`} 
                                 className={`nav-menu-item ${activeIndex === index && 'active'}`} 
-                                onClick={''}
+                                onClick={closeMenu}
                             >
                                 <div className="nav-menu-item-txt">
                                     {nav.text}
@@ -100,16 +112,7 @@ const Navigation = () => {
                         ))
                     )
                 }
-                {/* <div className="nav-menu-item">
-                    <div className="nav-menu-item-icon">
-                        <Logout />
-                    </div>
-                    <div className="nav-menu-item-txt">
-                        Đăng xuất
-                    </div>
-                </div> */}
             </div>
-            
         </div>
     )
 }

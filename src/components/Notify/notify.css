@@ -1,0 +1,25 @@
+.notify {
+    >h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #ce252a;
+    }
+
+    .notify-item {
+        display: flex;
+        gap: 20px;
+        border-radius: 20px;
+        margin: 20px 0;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        padding: 20px;
+        align-items: center;
+        >img {
+            width: 20vw;
+            max-width: 120px;
+        }
+        >p>span {
+            color: #ce252a;
+        }
+    }
+}

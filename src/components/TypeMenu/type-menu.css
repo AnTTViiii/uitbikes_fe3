@@ -1,27 +1,37 @@
 .type-menu {
     margin: 50px 0;
     display: flex;
-    flex-wrap: wrap;
+    gap: 20px;
     height: auto;
     width: 100%;
     .type-menu-item {
         align-items: center;
         text-align: center;
         padding: 15px;
-        flex-basis: calc(25% - 15px);
-        &:first-of-type {
-            margin-left: 0;
-        }
-        &:last-of-type {
-            margin-right: 0;
-        }
+        cursor: pointer;
+        flex: 1 1 0px;
         background-color: white;
-        margin: 20px 10px;
         border-radius: 10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-        &:hover {
+        
+        &:hover, &.active {
             background-color: #ce252a;
             color: white;
+        }
+    }
+    @media screen and (max-width: 470px) {
+        .type-menu-item {
+            .type-menu-item-txt {
+                display: none;
+            }
+        }
+    }
+
+    @media screen and (max-width: 310px) {
+        gap: 10px;
+        margin: 25px 0;
+        .type-menu-item {
+            padding: 10px;
         }
     }
 }

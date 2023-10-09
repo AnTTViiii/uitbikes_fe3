@@ -1,10 +1,9 @@
 import React from 'react'
+import ResetPass from '../components/ResetPassword/ResetPass'
 
 const ResetPassword = () => {
   return (
-    <div>
-      
-    </div>
+    <ResetPass />
   )
 }
 

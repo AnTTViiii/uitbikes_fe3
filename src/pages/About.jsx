@@ -3,9 +3,7 @@ import AboutUs from '../components/AboutUs/AboutUs'
 
 const About = () => {
   return (
-    <div className='about'>
-      <AboutUs />
-    </div>
+    <AboutUs />
   )
 }
 

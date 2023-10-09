@@ -11,6 +11,8 @@ const UserProfile = () => {
   //   }
   // }
   return (
+    <>
+    <h3>Hồ sơ</h3>
     <div className='user-profile'>
       <div className="user-profile-left">
         <img src={Account.avatar} alt={Account.username} className="user-avatar" />
@@ -31,6 +33,7 @@ const UserProfile = () => {
         <p>Địa chỉ: <span>{Customer.address}</span></p>
       </div>
     </div>
+    </>
   )
 }
 

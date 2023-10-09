@@ -1,0 +1,24 @@
+.reset-pass {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    height: fit-content;
+    >h1 {
+        color: #ce252a
+    }
+    > div {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+    .reset-pass-email, .reset-pass-code {
+        text-transform: none !important;
+    }
+    .confirm-code, #success {
+        display: none;
+    }
+}

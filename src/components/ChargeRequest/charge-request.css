@@ -1,0 +1,35 @@
+.charge-request {
+    display: grid;
+    grid-template-columns: 200px auto;
+    gap: 20px;
+    .qr-transfer {
+        text-align: center;
+        >p {
+            font-weight: 700;
+        }
+        >img {
+            width: 100%;
+            max-width: 200px;
+        }
+    }
+    .charge-request-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+
+        .charge-request-btn {
+            width: fit-content;
+            background-color: #ce252a;
+            text-transform: none;
+        }
+    }
+    @media screen and (max-width: 590px) {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        >div>img {
+            width: 50%;
+        }
+    }
+}

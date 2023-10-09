@@ -1,0 +1,22 @@
+.signup {
+    width: 50%;
+    min-width: 300px;
+    margin: 5vh auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    >div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        .signup-submit {
+            text-transform: none;
+            background-color: #ce252a;
+        }
+        >p>a {
+            color:#ce252a;
+        }
+    }
+}
