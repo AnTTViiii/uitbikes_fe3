@@ -23,7 +23,7 @@ html {
 body {
   font-family: Arial;
   color: black;
-  font-size: 15;
+  font-size: 15px;
   line-height: 1.5;
   /* background-color: #f3f3f3; */
   background-color: white;
@@ -32,7 +32,7 @@ body {
 
 @media screen and (max-width: 700px) {
   a, p, div {
-    font-size: 12.5;
+    font-size: 12.5px;
   }
 }
 

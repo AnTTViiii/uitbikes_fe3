@@ -1,7 +1,7 @@
 import React from 'react'
 import Customer, { ChargeRequest, Invoice } from '../Data/Customer'
 import './transaction-history.css'
-import { dot3digits } from '../functions/functions'
+import { dot3digits, getChargeRequestStatusName } from '../functions/functions'
 
 const TransactionHistory = () => {
   return (
@@ -45,7 +45,7 @@ const TransactionHistory = () => {
                   <td>{item.date}</td>
                   <td>{item.account_number}</td>
                   <td>{dot3digits(item.money)} đ</td>
-                  <td>{item.status}</td>
+                  <td>{getChargeRequestStatusName(item.status)}</td>
                 </tr>
               ))
             }

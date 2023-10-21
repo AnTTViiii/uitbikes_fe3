@@ -3,6 +3,7 @@ import { Invoice } from '../Data/Customer'
 import Cart from '../Data/Cart'
 import { dot3digits, getInvoiceStatusName } from '../functions/functions'
 import './purchase-order.css'
+import { Button } from '@mui/material'
 const PurchaseOrder = () => {
   const orderStatus = [
     { name: 'Tất cả' },
@@ -45,7 +46,7 @@ const OrderDetail = ({item}) => {
         <p>{getInvoiceStatusName(item.status)}</p>
       </div>
       <div className="order-products">
-        {item.details.map((item, index) => index < 3 && (
+        {item.details.map((item) => (
           Cart.map((product) => product.product.p_id === item.p_id && (
             <div className='order-product'>
               <img src={product.product.image} alt={product.product.name} />
@@ -60,7 +61,22 @@ const OrderDetail = ({item}) => {
             </div>
           ))
         ))}
-        <div className='order-total'>Thành tiền: <span>{dot3digits(item.total)} đ </span></div>
+        <table>
+          <tr>
+            <td>Phí vận chuyển</td>
+            <td className='shipping-fee'>250.000 đ</td>
+          </tr>
+          <tr>
+            <td>Thành tiền</td>
+            <td className='order-total'>{dot3digits(item.total)} đ</td>
+          </tr>
+          {item.status === 0 ? (
+            <tr>
+              <td></td>
+              <td><Button className='order-cancel-btn'>Hủy</Button></td>
+            </tr>
+          ) : ''}
+        </table>
       </div>
     </div>
   )

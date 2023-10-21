@@ -71,14 +71,36 @@
                         color: #ce252a;
                     }
                 }
-                .order-total {
-                    margin: 20px 0;
-                    display: block;
+                >table {
+                    border-collapse: collapse;
+                    width: 100%;
                     text-align: right;
-                    
-                    >span {
-                        color: #ce252a;
-                        font-size: large;
+                    >tr {
+                        border-bottom: 1px solid #e5e5e5;
+                        >td {
+                            padding: 10px 15px;
+                        }
+                        >td:nth-child(1) {
+                            border-right: 1px solid #e5e5e5;
+                        }
+                        >td:nth-child(2) {
+                            width: 30%;
+                            min-width: fit-content;
+                            color: #ce252a;
+                        }
+                        .order-total {
+                            font-size: large;
+                            font-weight: 700;
+                        }
+                        .order-cancel-btn {
+                            background-color: #ce252a;
+                            color: white;
+                            width: fit-content;
+                            padding: 5px;
+                            margin-left: auto;
+                            text-transform: none;
+                            font-size: small;
+                        }
                     }
                 }
             }

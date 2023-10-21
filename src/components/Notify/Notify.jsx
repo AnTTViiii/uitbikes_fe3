@@ -27,7 +27,7 @@ export const NotifyItem = ({item}) => {
           ))
         )
       }
-      <p>Hóa đơn <span>#{item.invoice_id}</span> đã được giao.</p>
+      <p>Đơn hàng <span>#{item.invoice_id}</span> đã được giao.</p>
     </div>
   )
 }
