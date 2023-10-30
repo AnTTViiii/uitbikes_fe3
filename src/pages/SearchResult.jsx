@@ -15,8 +15,6 @@ const SearchResult = () => {
     setFilterToggle(!filterToggle)
   }
 
-
-
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     setKeyWord(searchParams.get('s'));

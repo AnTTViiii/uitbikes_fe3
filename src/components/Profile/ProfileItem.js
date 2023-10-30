@@ -4,7 +4,7 @@ import Transaction from '../TransactionHistory/TransactionHistory'
 import ChargeRequest from '../ChargeRequest/ChargeRequest'
 import PurchaseOrder from '../PurchaseOrder/PurchaseOrder'
 import UserProfile from '../UserProfile/UserProfile'
-import { AccountBalanceWalletRounded, LogoutRounded, ManageAccountsRounded, PasswordRounded, PaymentRounded, PersonRounded, ReceiptLongRounded } from '@mui/icons-material'
+import { AccountBalanceWalletRounded, ManageAccountsRounded, PasswordRounded, PaymentRounded, PersonRounded, ReceiptLongRounded } from '@mui/icons-material'
 
 export const ProfileItem = [
     {
@@ -48,12 +48,5 @@ export const ProfileItem = [
       url: '/user/purchase',
       section: 'purchase',
       page: PurchaseOrder
-    },
-    {
-      name: 'Đăng xuất',
-      icon: <LogoutRounded />,
-      url: '/home',
-      section: 'home',
-      page: ''
     }
 ];

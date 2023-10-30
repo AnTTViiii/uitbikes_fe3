@@ -1,4 +1,7 @@
-import { AccountCircle, ExitToApp, Info, Login, NotificationsActive, ShoppingCart } from "@mui/icons-material"
+import { AccountCircle, Info, Login, NotificationsActive, ShoppingCart } from "@mui/icons-material"
+
+const user = JSON.parse(localStorage.getItem("user"));
+console.log(user)
 
 const NavItem = [
     {
@@ -7,12 +10,6 @@ const NavItem = [
         icon: <Info />,
         text: 'Về chúng tôi'
     },
-    // {
-    //     link: '/register',
-    //     section: 'register',
-    //     icon: <ExitToApp />,
-    //     text: 'Đăng ký'
-    // },
     {
         link: '/signin',
         section: 'signin',
@@ -34,8 +31,8 @@ const NavItem = [
     {
         link: '/user',
         section: 'user',
-        icon: <AccountCircle />,
-        text: 'username'
+        icon: user !== null ? (user.avatar !== null ? <img src={user.avatar} alt="" /> : <AccountCircle />) : <AccountCircle />,
+        text: user !== null ? user.username : ''
     }
 ]
 

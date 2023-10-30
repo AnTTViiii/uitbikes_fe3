@@ -1,15 +1,21 @@
-import React from 'react'
-import ProductData from '../Data/Product';
+import React, { useEffect, useState } from 'react'
 import ProductItem from './ProductItem';
 import './product.css'
+import axios from 'axios';
 
 const Product = ({type}) => {
-  const data = [];
-  ProductData.map((item) => (
-    type !== '' ? (
-      item.type_id === type ? data.push(item) : data
-    ) : (data.push(item))
-  ))
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:9090/api/products/details/type/${type}`)
+      .then(res => {
+        setData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [type]);
+
   return (
     <div className='product'>
       {data.map((item) => 

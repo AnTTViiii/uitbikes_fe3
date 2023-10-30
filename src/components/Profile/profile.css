@@ -5,20 +5,25 @@
     .profile-sidebar {
         width: 20%;
         min-width: 169px;
-        /* background-color: #f5f5f5; */
+
         .profile-sidebar-page {
             padding: 10px 20px;
+            cursor: pointer;
+
             &:hover, &.active {
                 color: #ce252a;
                 font-weight: 700;
             }
+
             &.page-icon {
                 display: none;
             }
+
             @media screen and (max-width: 460px) {
                 &.page-icon {
                     display: block;
                 }
+
                 &.page-name {
                     display: none;
                 }
@@ -31,6 +36,7 @@
             background-color: #f5f5f5;
             overflow-x: scroll;
             justify-content: space-between;
+
             .profile-sidebar-page {
                 padding: 5px;
                 flex: 1 1 0px;
@@ -45,6 +51,7 @@
 
     @media screen and (max-width: 460px) {
         flex-direction: column;
+        
         .profile-outlet {
             padding: 20px 15px 0;
             width: 100%;

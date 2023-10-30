@@ -4,7 +4,7 @@ const TypeList = [
     {
         icon: <BorderAllRounded />,
         text: 'Tất cả',
-        type: ''
+        type: 0
     },
     {
         icon: <PedalBikeRounded />,

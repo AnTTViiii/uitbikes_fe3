@@ -4,7 +4,7 @@ import TypeMenu from '../components/TypeMenu/TypeMenu'
 import Product from '../components/Product/Product'
 
 const Home = () => {
-  const [type, getType] = useState('');
+  const [type, getType] = useState(0);
 
   return (
     <div className='home'>

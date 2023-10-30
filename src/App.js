@@ -11,29 +11,44 @@ import ResetPassword from './pages/ResetPassword';
 import Signin from './pages/Signin';
 import ProductDetail from './components/Product/ProductDetail';
 import SearchResult from './pages/SearchResult';
+import { useSelector } from 'react-redux';
 
 function App() {
+  const { isAuthed } = useSelector((state) => state.auth);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<MainLayout />} >
-          <Route index element={<Home />} />
-          <Route path='product/*' element={<ProductDetail />} />
-          <Route path='about' element={<About />} />
-          <Route path='register' element={<Register />} />
-          <Route path='signin' element={<Signin />} />
-          <Route path='cart' element={<Cart />} />
-          <Route path='notify' element={<Notification />} />
-          <Route path='user' element={<User />} />
-          <Route path='user/edit' element={<User />} />
-          <Route path='user/password' element={<User />} />
-          <Route path='user/charge' element={<User />} />
-          <Route path='user/purchase' element={<User />} />
-          <Route path='user/transaction' element={<User />} />
-          <Route path='resetpw' element={<ResetPassword />} />
-          <Route path='search' element={<SearchResult />} />
-          <Route path='*' element={<Home />} />
-        </Route>
+        {isAuthed ? (
+          <Route path='/' element={<MainLayout />} >
+            <Route index element={<Home />} />
+            <Route path='product/*' element={<ProductDetail />} />
+            <Route path='about' element={<About />} />
+            <Route path='cart' element={<Cart />} />
+            <Route path='notify' element={<Notification />} />
+            <Route path='user' element={<User />} />
+            <Route path='user/edit' element={<User />} />
+            <Route path='user/password' element={<User />} />
+            <Route path='user/charge' element={<User />} />
+            <Route path='user/purchase' element={<User />} />
+            <Route path='user/transaction' element={<User />} />
+            <Route path='search' element={<SearchResult />} />
+            <Route path='*' element={<Home />} />
+          </Route>
+        ) : (
+          <Route path='/' element={<MainLayout />} >
+            <Route index element={<Home />} />
+            <Route path='product/' element={<ProductDetail />} />
+            <Route path='about' element={<About />} />
+            <Route path='register' element={<Register />} />
+            <Route path='signin' element={<Signin />} />
+            <Route path='cart' element={<Signin />} />
+            <Route path='user' element={<Signin />} />
+            <Route path='resetpw' element={<ResetPassword />} />
+            <Route path='search' element={<SearchResult />} />
+            <Route path='*' element={<Home />} />
+          </Route>
+        )}
       </Routes>
     </BrowserRouter>
   );

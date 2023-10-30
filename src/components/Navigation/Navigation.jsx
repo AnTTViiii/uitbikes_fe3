@@ -7,14 +7,19 @@ import './navigation.css'
 import { IconButton, Paper, InputBase, Badge } from '@mui/material';
 import { Search, Tune, Menu, Clear } from '@mui/icons-material';
 import { getItemQuantity } from '../functions/functions';
-import Cart from '../Data/Cart';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const Navigation = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [toggle, setToggle] = useState(1);
+
     const location = useLocation();
     const navigate = useNavigate();
-    const isLogin = 0;
+
+    const { isAuthed } = useSelector((state) => state.auth);
+    const user = isAuthed ? JSON.parse(localStorage.getItem("user")) : [];
+
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1];
         const activeItem = NavItem.findIndex(item => item.section === curPath);
@@ -43,6 +48,18 @@ const Navigation = () => {
         const query = queryString.stringify({ s: searchTerm });
         navigate(`search?${query}`);
     };
+
+    const [cartItemQty, setCartItemQty] = useState(0);
+    // useEffect(() => {
+    //     axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}`)
+    //         .then(res => {
+    //             setCartItemQty(getItemQuantity(res.data));
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //         });
+    // }, []);
+
     return (
         <div id='nav' className='nav'>
             <div className='nav-logo'>
@@ -56,9 +73,6 @@ const Navigation = () => {
             <Paper component="form" className='nav-search' onSubmit={handleSubmit}
                 sx={{ p: '2px 3px', display: 'flex', alignItems: 'center', width: '100%' }}
             >
-                <IconButton sx={{ p: '10px', color: '#2b2b37' }} aria-label="filter">
-                    <Tune />
-                </IconButton>
                 <InputBase
                     sx={{ ml: 1, flex: 1 }}
                     placeholder="Nhập từ khóa tìm kiếm..."
@@ -70,20 +84,8 @@ const Navigation = () => {
                     <Search />
                 </IconButton>
             </Paper>
-            <div className={isLogin ? "nav-menu-signup": "nav-menu"}>
-                {isLogin === 0 ? 
-                    (  
-                        NavItem.map((nav, index) => ( index < 2 &&
-                            <Link to={nav.link} key={`nav-${index}`} 
-                                className={`nav-menu-item ${activeIndex === index && 'active'}`} 
-                                onClick={closeMenu}
-                            >
-                                <div className="nav-menu-item-txt">
-                                    {nav.text}
-                                </div>
-                            </Link>
-                        ))
-                    ) :
+            <div className={isAuthed ? "nav-menu-signup": "nav-menu"}>
+                {isAuthed ? 
                     (
                         NavItem.map((nav, index) => ( (index === 0 || index >= 2) &&
                             <Link to={nav.link} key={`nav-${index}`} 
@@ -93,7 +95,7 @@ const Navigation = () => {
                                 {
                                     nav.section === 'cart' ? 
                                     (
-                                        <Badge badgeContent={getItemQuantity(Cart)} color='error'>
+                                        <Badge badgeContent={cartItemQty} color='error'>
                                             <div className="nav-menu-item-icon">
                                                 {nav.icon}
                                             </div>
@@ -106,7 +108,18 @@ const Navigation = () => {
                                     )
                                 }
                                 <div className="nav-menu-item-txt">
-                                    {index === 4 ? nav.text : ''}
+                                    { nav.section === 'user' ? nav.text : '' }
+                                </div>
+                            </Link>
+                        ))
+                    ) : (  
+                        NavItem.map((nav, index) => ( index < 2 &&
+                            <Link to={nav.link} key={`nav-${index}`} 
+                                className={`nav-menu-item ${activeIndex === index && 'active'}`} 
+                                onClick={closeMenu}
+                            >
+                                <div className="nav-menu-item-txt">
+                                    {nav.text}
                                 </div>
                             </Link>
                         ))
