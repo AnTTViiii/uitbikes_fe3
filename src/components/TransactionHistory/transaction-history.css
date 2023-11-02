@@ -1,5 +1,28 @@
 .transaction {
-    >div{
+    .purchase-history-table {
+        .css-kzyyzb-MuiDataGrid-root {
+            border-color: silver;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+        }
+        .odd {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #f5f5f5;
+
+            .MuiDataGrid-columnHeaderTitleContainer {
+                justify-content: center;
+            }
+
+            .css-t89xny-MuiDataGrid-columnHeaderTitle {
+                font-weight: 700;
+            }
+        }
+    }
+    >div:not(:first-child){
         >p {
             font-size: 1.6em;
             font-weight: 700;

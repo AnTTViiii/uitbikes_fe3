@@ -1,50 +1,50 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Cart from '../Data/Cart'
-import { dot3digits } from '../functions/functions';
-import { IconButton } from '@mui/material';
+import { Transition, dot3digits } from '../functions/functions';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 import { DeleteForeverRounded } from '@mui/icons-material';
 import Customer from '../Data/Customer'
 import { getItemQuantity } from '../functions/functions';
 import './shopping-cart.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 const ShoppingCart = () => {
-  // const listProducts = [];
+  const [data, setData] = useState([]);
+  const [cartQty, setCartQty] = useState([]);
   const [listProducts, setListProducts] = useState([]);
+  const { isAuthed } = useSelector((state) => state.auth);
+  const user = isAuthed ? JSON.parse(localStorage.getItem("user")) : [];
   
   const pushToBuyList = (e, {item}) => {
-    // const { value, checked } = e;
-    // console.log(`${value} is ${checked}`);
-
-    // if (checked) {
-    //   setListProducts([...listProducts, value]);
-    // }
-    // else {
-    //   setListProducts([listProducts.filter((e) => e.cart_id !== value.cart_id)])
-    // }
-
     if (e.target.checked) {
-      setListProducts([
-        ...listProducts, item,
-      ]);
+      setListProducts([...listProducts, item,]);
     } else {
-      // remove from list
-      setListProducts(
-        listProducts.filter((product) => product.cart_id !== item.cart_id),
-      );
+      setListProducts(listProducts.filter((product) => product.cart_id !== item.cart_id),);
     }
 
     console.log(listProducts);
   }
+
+  useEffect(() => {
+    axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}`)
+      .then((res) => {
+        setData(res.data)
+        setCartQty(getItemQuantity(res.data))
+      })
+      .catch((err) => console.log(err))
+  }, [data, cartQty]);
+
   return (
     <div className='shopping-cart'>
       <div className="cart-items">
         <div className="cart-items-title">
           <h2>GIỎ HÀNG</h2>
-          <p>({Cart.length} sản phẩm)</p>
+          <p>({cartQty} sản phẩm)</p>
         </div>
         {
-          Cart.map((item) => (
+          data.map((item) => (
             <div className='item-row'>
               <input type='checkbox' value={(listProducts)} onChange={(e) => {pushToBuyList(e, {item})}} />
               <CartItem item={item} />
@@ -81,7 +81,7 @@ export const CartItem = ({item}) => {
       </div>
       
       <div className="cart-item-detail">
-          <p><Link to={`/product/${item.product.p_id}`}>{item.product.name}</Link></p>
+          <p><Link to={`/product/${item.product.name}`}>{item.product.name}</Link></p>
           <p>Màu: {item.product.color}</p>
           <p>{dot3digits(item.product.price)} đ</p>
       </div>
@@ -102,21 +102,41 @@ export const CartItem = ({item}) => {
 }
 
 export const SummaryInvoice = ({item}) => {
+  const { isAuthed } = useSelector((state) => state.auth);
+  const user = isAuthed ? JSON.parse(localStorage.getItem("user")) : [];
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   axios.get(`http://localhost:9090/api/accounts/`)
+  // })
   const getTotal = (item) => {
     let total = 0;
     item.map((i) => (total += i.product.price * i.quantity));
     return total;
   }
-  // const getItemQuantity = (item) => {
-  //   let qty = 0;
-  //   item.map((i) => (qty += i.quantity));
-  //   return qty;
-  // }
+
   const payment = (balance, total) => {
-    if (balance >= total) {
-      localStorage.setItem("invoice", JSON.stringify(item));
-    } else alert('Số dư của khách hàng không đủ! Vui lòng nạp thêm để tiếp tục thanh toán.');
+    if (total === 0) {
+      alert('Vui lòng chọn ít nhất 1 sản phẩm!');
+    } else {
+      if (balance >= total) {
+        const cus = user.customer;
+        if (!cus.phone || !cus.address || !cus.idNumber || !cus.name) {
+          setOpen(true);
+        }
+        localStorage.setItem("invoice", JSON.stringify(item));
+      } else alert('Số dư của khách hàng không đủ! Vui lòng nạp thêm để tiếp tục thanh toán.');
+    }
   }
+
+  const [open, setOpen] = useState(false);
+
+  const handleNavigate = () => {
+    navigate('/user/edit')
+  }
+
+  const handleClose = () => setOpen(false);
+
   return (
     <div className='summary-invoice'>
       <p>Sản phẩm: <span>{getItemQuantity(item)}</span></p>
@@ -124,8 +144,23 @@ export const SummaryInvoice = ({item}) => {
       <p>Phí vận chuyển:<span>250.000 đ</span></p>
       <hr/>
       <p>Tổng cộng: <span>{dot3digits(getTotal(item)+250000)} đ</span></p>
-      <p>Số dư: <span>{dot3digits(Customer.balance)} đ</span></p>
-      <div onClick={() => payment(Customer.balance, getTotal(item))}>Thanh toán</div>
+      <p>Số dư: <span>{dot3digits(user.customer.balance)} đ</span></p>
+      <div onClick={() => payment(user.customer.balance, getTotal(item))}>Thanh toán</div>
+
+      <Dialog open={open} TransitionComponent={Transition}
+        keepMounted onClose={handleClose}
+      >
+        <DialogTitle>{"Cập nhật thông tin tài khoản?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Vui lòng cập nhật đầy đủ thông tin cá nhân để tiếp tục mua hàng!
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleNavigate}>Cập nhật</Button>
+          <Button onClick={handleClose}>Để sau</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

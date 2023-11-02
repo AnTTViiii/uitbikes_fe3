@@ -66,3 +66,7 @@ export const getInvoiceStatusNotify = (status) => {
     else if (status === 2) return "đã được giao";
     else return "đã bị hủy"
 }
+
+export const getGender = (gender) => {
+    return gender === 0 ? 'Nam' : (gender === 1 ? 'Nữ' : 'Khác')
+}

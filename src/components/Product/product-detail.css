@@ -119,20 +119,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            >div {
-                color: white;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-                &.buy-now {
-                    background-color: #ce252a;
-                }
-                &.add-to-cart {
-                    background-color: black;
-                }
-                &:hover {
-                    background-color: #c6c6c6;
-                }
+            .add-to-cart {
+                background-color: black !important;
             }
         }
     }

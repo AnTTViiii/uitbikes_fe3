@@ -88,3 +88,16 @@ body {
 pre {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.bgMainColor {
+  background-color: #ce252a !important;
+  color: white !important;
+}
+
+.bgColor {
+  background-color: #f5f5f5 !important;
+}
+
+.noneTextTransform {
+  text-transform: none !important;
+}

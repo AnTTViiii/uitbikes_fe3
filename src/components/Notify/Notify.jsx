@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Cart from '../Data/Cart'
-import { Invoice } from '../Data/Customer'
 import { NotificationsActive } from '@mui/icons-material'
 import './notify.css'
 import { getInvoiceStatusNotify } from '../functions/functions'
@@ -15,20 +13,27 @@ const Notify = () => {
   
   useEffect(() => {
     axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/-1`)
-      .then(res => {
+      .then((res) => {
         setData(res.data);
       })
       .catch((error) => {
           console.log(error);
       });
   }, []);
+  console.log(data)
 
   return (
     <div className='notify'>
       <h2><NotificationsActive />Thông báo</h2>
-      {data.map((item) => item.status > 0 && (
-        <NotifyItem item={item} />
-      ))}
+      {
+        data === undefined || data.length > 0 ? (
+          data.map((item) => item.status > 0 && (
+            <NotifyItem item={item} />
+          ))
+        ) : (
+          <div><i>Không có thông báo mới!</i></div>
+        )
+      }
     </div>
   )
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import ProductData from '../Data/Product'
-import { getTypeName, getBrandName, dot3digits } from '../functions/functions'
+import { Transition, dot3digits } from '../functions/functions'
 import './product-detail.css'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -17,6 +17,7 @@ const ProductDetail = () => {
 
   const [data, setData] = useState([]); 
   const [details, setDetails] = useState([]);
+  const [productId, setProductId] = useState(null);
 
   useEffect(() => {
     axios.get("http://localhost:9090/api/products/detail/names/" + name)
@@ -24,7 +25,7 @@ const ProductDetail = () => {
         setData(response.data);
         setDetails(response.data.detail);
       });
-  }, []);
+  }, [name, data, details]);
 
   const [descriptionToggle,  setDescriptionToggle] = useState(0);
   const toggleTab = (index) => {
@@ -45,13 +46,102 @@ const ProductDetail = () => {
   }
 
   const [colorSelected, setColorSelected] = useState(0);
+  const [price, setPrice] = useState(null);
 
-  const handlePurchased = () => {
+  const [notify, setNotify] = useState(null);
+  const [actionMsg, setActionMsg] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showNotify, setShowNotify] = useState(false);
 
+  const setAlertError = (error) => {
+    setNotify(error);
+    setShowAlert(true);
+  };
+
+  const setNofification = (success) => {
+      setNotify(success);
+      setShowNotify(true);
+  };
+
+  const [openRemindUpdateInfoDialog, setOpenRemindUpdateInfoDialog] = useState(false);
+  const [link, setLink] = useState('')
+  const handleNavigate = () => {
+    navigate(link)
   }
 
-  const handleAddToCart = () => {
+  const handleCloseRemminderDialog = () => setOpenRemindUpdateInfoDialog(false);
 
+  const handlePurchased = async() => {
+    // details.map((item, idx) => idx === colorSelected && (setProductId(item.id), setPrice(item.price)))
+    let total = count * price;
+    if (isAuthed) {
+      const cus = user.customer;
+      if (!cus.phone || !cus.address || !cus.idNumber || !cus.name) {
+        setNotify('Vui lòng cập nhật đầy đủ thông tin cá nhân để tiếp tục mua hàng!')
+        setLink('/user/edit')
+        setActionMsg('Cập nhật')
+        setOpenRemindUpdateInfoDialog(true);
+      } else {
+        if (cus.balance < total) {
+          setNotify('Số dư của khách hàng không đủ! Vui lòng nạp thêm để tiếp tục thanh toán.')
+          setLink('/user/charge')
+          setActionMsg('Nạp tiền')
+          setOpenRemindUpdateInfoDialog(true);
+        } else {
+          const order = {
+            total: total,
+            customer: cus
+          }
+          await axios.post(`http://localhost:9090/api/invoices`, order)
+            .then((res) => {
+              if(res.data.id !== undefined)
+                axios.put(`http://localhost:9090/api/invoices/${res.data.id}/product/${productId}/quantity/${count}`)
+                  .then((res1) => {setNofification('Đơn hàng đã được tạo.')})
+                  .catch((err) => {
+                    console.log(err);
+                    setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+                  })
+              else setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+            }).catch((error) => {
+              console.log(error);
+              setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+            });
+        }
+      }
+    } else navigate('/signin')
+  }
+
+  const handleClose = () => {
+    setNotify(null);
+    setShowAlert(false);
+    setShowNotify(false)
+  }
+
+  const handleAddToCart = async() => {
+    if (isAuthed) {
+      const product = { "quantity": count }
+      if (productId == null) {
+        details.map((item, idx) => idx === colorSelected && setProductId(item.id))
+      } else {
+        try {
+          await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`)
+            .then(res => {
+              if(res.data.id === undefined)
+                axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`, product)
+              else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
+              setNofification('Đã thêm vào giỏ hàng.')
+            }).catch((error) => {
+              console.log(error);
+              setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+            });
+        } catch (error) {
+          console.log(error);
+          setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+        }
+        setTimeout(handleClose, 2500);
+      }
+      
+    } else navigate('/signin')
   }
 
   return (
@@ -74,7 +164,7 @@ const ProductDetail = () => {
           {
             details.map((item, index) => (
               <div className={`color ${colorSelected === index ? ' active' : ''}`} 
-                  onClick={(e) => {setColorSelected(index)}}>
+                  onClick={(e) => {setColorSelected(index); setProductId(item.id); setPrice(item.price)}}>
                 {item.color}
               </div>
             ))
@@ -93,9 +183,31 @@ const ProductDetail = () => {
           }
         </div>
         <div className="shopping-button">
-          <div className="buy-now" onClick={isAuthed ? handlePurchased : navigate("/signin")}>Mua ngay</div>
-          <div className="add-to-cart" onClick={isAuthed ? handleAddToCart : navigate("/signin")}>Thêm vào giỏ</div>
+          <Button variant='contained' className="bgMainColor noneTextTransform" onClick={handlePurchased}>Mua ngay</Button>
+          <Button variant='contained' className="add-to-cart noneTextTransform" onClick={handleAddToCart}>Thêm vào giỏ</Button>
         </div>
+
+        <Dialog open={showAlert ? showAlert : showNotify}
+                onClose={handleClose}>
+          <Alert onClose={handleClose} severity={showAlert ? "error" : "success"} sx={{ width: '100%' }}>
+            { notify }
+          </Alert>
+        </Dialog>
+
+        <Dialog open={openRemindUpdateInfoDialog} TransitionComponent={Transition}
+          keepMounted onClose={handleCloseRemminderDialog}
+        >
+          <DialogTitle>{"Cập nhật thông tin tài khoản?"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {notify}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button className="bgMainColor noneTextTransform" onClick={handleNavigate}>{actionMsg}</Button>
+            <Button className="bgColor noneTextTransform" onClick={handleCloseRemminderDialog}>Để sau</Button>
+          </DialogActions>
+        </Dialog>
       </div>
       <div className="product-detail-description">
         <div className="product-detail-description-title">

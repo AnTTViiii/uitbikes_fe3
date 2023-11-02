@@ -5,7 +5,7 @@ import logo from '../../assets/images/uit_bikes_logo.svg';
 import NavItem from './NavItem';
 import './navigation.css'
 import { IconButton, Paper, InputBase, Badge } from '@mui/material';
-import { Search, Tune, Menu, Clear } from '@mui/icons-material';
+import { Search, Menu, Clear } from '@mui/icons-material';
 import { getItemQuantity } from '../functions/functions';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
@@ -50,15 +50,17 @@ const Navigation = () => {
     };
 
     const [cartItemQty, setCartItemQty] = useState(0);
-    // useEffect(() => {
-    //     axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}`)
-    //         .then(res => {
-    //             setCartItemQty(getItemQuantity(res.data));
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //         });
-    // }, []);
+    useEffect(() => {
+        if (isAuthed) {
+            axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}`)
+                .then((res) => {
+                    setCartItemQty(getItemQuantity(res.data));
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+    }, [cartItemQty]);
 
     return (
         <div id='nav' className='nav'>

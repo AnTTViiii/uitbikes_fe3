@@ -1,7 +1,6 @@
 import { AccountCircle, Info, Login, NotificationsActive, ShoppingCart } from "@mui/icons-material"
 
 const user = JSON.parse(localStorage.getItem("user"));
-console.log(user)
 
 const NavItem = [
     {
