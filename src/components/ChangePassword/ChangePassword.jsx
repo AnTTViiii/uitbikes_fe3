@@ -1,39 +1,90 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
-import React, { useState } from 'react'
+import { CheckRounded, ErrorRounded, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Alert, Button, Dialog, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
+import React, { useRef, useState } from 'react'
 import './change-password.css'
 import axios from 'axios';
 const ChangePassword = () => {
+  const user = JSON.stringify(localStorage.getItem("user"))
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  // const handleUpdateAvatar = async() => {
-  //   const avt = {}
+  const oldPassRef = useRef();
+  const newPassRef = useRef();
+  const confirmPassRef = useRef();
 
-  //   axios.put(`http://localhost:9090/api/accounts/${user.username}/avatar`, avt)
-  //     .then((res) => {
-  //       axios.get(`http://localhost:9090/api/accounts/${user.username}`)
-  //         .then((res1) => {localStorage.setItem('user', JSON.stringify(res1.data))})
-  //         .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
-  //       document.getElementById('saveAvatarBtn').style.display = "none";
-  //       setSuccess("Ảnh đại diện đã được cập nhật!")
-  //       setShowAlertSuccess(true);
-  //       setTimeout(() => {
-  //         setSuccess(null)
-  //         setShowAlertSuccess(false)
-  //       }, 3000)
-  //     })
-  //     .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
-  // }
+  const handleChangePassword = async() => {
+    const oldPass = oldPassRef.current.value
+    const newPass = newPassRef.current.value
+    const confirmPass = confirmPassRef.current.value
+
+    if (oldPass === '' || newPass === '' || confirmPass ==='') {
+      setAlertError("Vui lòng điền đầy đủ các trường!")
+    } else {
+      const checkPassword = {
+        email: user.email,
+        pw: oldPass
+      }
+  
+      await axios.get(`http://localhost:9090/api/accounts/check-password`, checkPassword)
+        .then((res) => {
+          if (res.data === false) setAlertError("Mật khẩu cũ chưa đúng!")
+          else {
+            if (newPass === oldPass) setAlertError("Mật khẩu mới trùng với mật khẩu cũ!")
+            else if (newPass !== confirmPass) setAlertError("Mật khẩu xác nhận chưa khớp!")
+            else {
+              const account = {
+                email: user.email,
+                pw: newPassRef.current.value
+              }
+  
+              axios.put(`http://localhost:9090/api/accounts/password`, account)
+                .then((res1) => {
+                  setShowAlert(false)
+                  setNofification("Mật khẩu mới đã được cập nhật!")
+                  setTimeout(handleCloseNotify, 3000)
+                })
+                .catch((err) => {
+                  console.log(err)
+                  setAlertError("Đã xảy ra lỗi! Vui lòng thử lại.")
+                })
+            }
+          }
+        })
+        .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
+    }
+  }
+
+  const [notify, setNotify] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showNotify, setShowNotify] = useState(false);
+
+  const setAlertError = (error) => {
+    setNotify(error);
+    setShowAlert(true);
+  };
+
+  const setNofification = (success) => {
+      setNotify(success);
+      setShowNotify(true);
+  };
+
+  const handleCloseNotify = () => {
+    setShowAlert(false);
+    setShowNotify(false);
+    oldPassRef.current.value = ''
+    newPassRef.current.value = ''
+    confirmPassRef.current.value = ''
+  };
+
   return (
     <div className='change-password'>
       <h3>Đổi mật khẩu</h3>
       <FormControl sx={{ m: 0.8 }} fullWidth variant="outlined">
         <InputLabel htmlFor="old-password">Mật khẩu cũ *</InputLabel>
-        <OutlinedInput required
+        <OutlinedInput required inputRef={oldPassRef}
           id="old-password"
           type={showPassword ? 'text' : 'password'}
           endAdornment={
@@ -52,7 +103,7 @@ const ChangePassword = () => {
       </FormControl>
       <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
         <InputLabel htmlFor="new-password">Mật khẩu mới *</InputLabel>
-        <OutlinedInput required
+        <OutlinedInput required inputRef={newPassRef}
           id="new-password"
           type={showPassword ? 'text' : 'password'}
           endAdornment={
@@ -71,7 +122,7 @@ const ChangePassword = () => {
       </FormControl>
       <FormControl sx={{ m: 1 }} fullWidth variant="outlined">
         <InputLabel htmlFor="confirm-new-password">Xác nhận mật khẩu mới *</InputLabel>
-        <OutlinedInput required
+        <OutlinedInput required inputRef={confirmPassRef}
           id="confirm-new-password"
           type={showPassword ? 'text' : 'password'}
           endAdornment={
@@ -88,7 +139,14 @@ const ChangePassword = () => {
           label="ConfirmPassword"
         />
       </FormControl>
-      <Button variant='contained' className='submit-new-pass bgMainColor'>Cập nhật</Button>
+      <Button variant='contained' className='submit-new-pass themeColor' onClick={handleChangePassword}>Cập nhật</Button>
+
+      {(showAlert || showNotify) &&
+        <Alert icon={showAlert ? <ErrorRounded /> : <CheckRounded />}
+          severity={showAlert ? "error" : "success"} sx={{ width: '100%' }}>
+          { notify }
+        </Alert>
+      }
     </div>
   )
 }

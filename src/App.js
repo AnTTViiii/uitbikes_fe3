@@ -38,7 +38,7 @@ function App() {
         ) : (
           <Route path='/' element={<MainLayout />} >
             <Route index element={<Home />} />
-            <Route path='product/' element={<ProductDetail />} />
+            <Route path='product/*' element={<ProductDetail />} />
             <Route path='about' element={<About />} />
             <Route path='register' element={<Register />} />
             <Route path='signin' element={<Signin />} />

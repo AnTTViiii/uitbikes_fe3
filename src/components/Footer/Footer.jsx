@@ -20,11 +20,9 @@ const Footer = () => {
       <div className="footer-col-3">
         <h2>VỀ CHÚNG TÔI</h2>
         <div className="hr"></div>
-        <a href="/">Giới thiệu</a>
-        <a href="/">Điều khoản sử dụng</a>
-        <a href="/">Quy chế hoạt động</a>
-        <a href="/">Trung tâm khách hàng</a>
-        <a href="/">Hỏi đáp (FAQ)</a>
+        <a href="/about">Giới thiệu</a>
+        <a href="/about">Điều khoản sử dụng</a>
+        <a href="/about">Quy chế hoạt động</a>
       </div>
       <p className='copyright'>&#169; {year}. All rights reserved.</p>
     </div>

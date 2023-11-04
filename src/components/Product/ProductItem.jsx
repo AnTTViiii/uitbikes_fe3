@@ -29,22 +29,24 @@ const ProductItem = ({item}) => {
   };
 
   async function handleAddToCart () {
-    const product = { "quantity": 1 }
-    try {
-      await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`)
-        .then(res => {
-          if(res.data.id === undefined)
-            axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`, product)
-          else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
-          setNofification('Đã thêm vào giỏ hàng.')
-        }).catch((error) => {
-          console.log(error);
-          setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-        });
-    } catch (error) {
-      console.log(error);
-      setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-    }
+    if (isAuthed) {
+      const product = { "quantity": 1 }
+      try {
+        await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`)
+          .then(res => {
+            if(res.data.id === undefined)
+              axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`, product)
+            else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
+            setNofification('Đã thêm vào giỏ hàng.')
+          }).catch((error) => {
+            console.log(error);
+            setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+          });
+      } catch (error) {
+        console.log(error);
+        setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+      }
+    } else navigate("/signin")
   };
 
   const handleClose = () => {
@@ -61,9 +63,9 @@ const ProductItem = ({item}) => {
           <img src={item.image} alt={item.name} />
         </div>
         <div className="product-item-txt">
-          <h3><Link to={`/product/${item.name}`}>{item.name}</Link></h3>
+          <h3><Link to={`/product/${item.name}/${item.id}`}>{item.name}</Link></h3>
           <p>{dot3digits(item.price)} vnđ</p>
-          <IconButton className='shopping-icon' onClick={isAuthed ? handleAddToCart : navigate("/signin")}>
+          <IconButton className='shopping-icon' onClick={handleAddToCart}>
             <ShoppingCartRounded />
           </IconButton>
         </div>

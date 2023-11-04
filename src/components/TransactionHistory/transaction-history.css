@@ -1,13 +1,30 @@
 .transaction {
-    .purchase-history-table {
+    .purchase-history-table, 
+    .charge-history-table {
         .css-kzyyzb-MuiDataGrid-root {
             border-color: silver;
             border-radius: 0;
             border-left: none;
             border-right: none;
         }
+
         .odd {
             background-color: #f5f5f5;
+        }
+
+        .MuiDataGrid-columnHeaders {
+            width: 100%;
+            background-color: #f5f5f5 !important;
+
+            /* >div {
+                width: 100%;
+
+                >div {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-around;
+                }
+            } */
         }
 
         .header {

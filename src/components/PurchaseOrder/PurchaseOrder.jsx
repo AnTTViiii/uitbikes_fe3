@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Invoice } from '../Data/Customer'
-import Cart from '../Data/Cart'
-import { dot3digits, getInvoiceStatusName } from '../functions/functions'
+import { Transition, dot3digits, getInvoiceStatusName } from '../functions/functions'
 import './purchase-order.css'
-import { Button } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
+import axios from 'axios'
 const PurchaseOrder = () => {
+  const user = JSON.parse(localStorage.getItem('user'))
+
   const orderStatus = [
     { name: 'Tất cả' },
     { name: 'Chờ xác nhận' },
@@ -12,23 +14,28 @@ const PurchaseOrder = () => {
     { name: 'Đã giao' },
     { name: 'Đã hủy' }
   ]
-  const [tab, setTab] = useState(0);
-  const products = [];
-  Invoice.map((item) => (
-    tab === 0 ? products.push(item) : (item.status === tab - 1 ? products.push(item) : '')
-  ))
+
+  const [tab, setTab] = useState(-1);
+
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/${tab}`)
+      .then((res) => setData(res.data))
+      .catch((err) => console.log(err))
+  }, [tab, data])
+
   return (
     <div className='purchase-order'>
       <h3>Đơn mua</h3>
       <div className="order-status-tab">
         {orderStatus.map((item, index) => (
-          <div className={tab === index ? 'active' : ''} onClick={()=>setTab(index)}>
+          <div className={tab === index - 1 ? 'active' : ''} onClick={()=>setTab(index - 1)}>
             {item.name}
           </div>
         ))}
       </div>
       <div className="order-list">
-        {products.map((item) => (
+        {data.map((item) => (
           <OrderDetail item={item} />
         ))}
       </div>
@@ -39,27 +46,43 @@ const PurchaseOrder = () => {
 export default PurchaseOrder
 
 const OrderDetail = ({item}) => {
+  const user = JSON.parse(localStorage.getItem('user'))
+  
+  const handleCancelOrder = async() => {
+    await axios.put(`http://localhost:9090/api/invoices/${item.id}/status/3`)
+      .then(() => {
+        handleCloseCancelDialog()
+        axios.get(`http://localhost:9090/api/accounts/${user.username}`)
+          .then((res) => {
+            localStorage.setItem('user', JSON.stringify(res.data))
+          })
+      })
+  }
+
+  useEffect(() => {}, [item])
+
+  const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const handleCloseCancelDialog = () => setOpenCancelDialog(false);
+
   return (
     <div>
       <div className="order-status">
-        <p>Hóa đơn #{item.invoice_id}</p>
+        <p>Hóa đơn #{item.id}</p>
         <p>{getInvoiceStatusName(item.status)}</p>
       </div>
       <div className="order-products">
-        {item.details.map((item) => (
-          Cart.map((product) => product.product.p_id === item.p_id && (
-            <div className='order-product'>
-              <img src={product.product.image} alt={product.product.name} />
+        {item.details.map((detail) => (
+          <div className='order-product'>
+            <img src={detail.product.image} alt={detail.product.name} />
+            <div>
               <div>
-                <div>
-                  <p>{product.product.name}</p>
-                  <p>Màu: {product.product.color}</p>
-                  <p>x{product.quantity}</p>
-                </div>
-                <div className='order-product-price'>{dot3digits(product.product.price)} đ</div>
+                <p>{detail.product.name}</p>
+                <p>Màu: {detail.product.color}</p>
+                <p>x{detail.quantity}</p>
               </div>
+              <div className='order-product-price'>{dot3digits(detail.product.price)} đ</div>
             </div>
-          ))
+          </div>
         ))}
         <table>
           <tr>
@@ -73,11 +96,21 @@ const OrderDetail = ({item}) => {
           {item.status === 0 ? (
             <tr>
               <td></td>
-              <td><Button className='order-cancel-btn'>Hủy</Button></td>
+              <td><Button className='order-cancel-btn' onClick={() => setOpenCancelDialog(true)}>Hủy</Button></td>
             </tr>
           ) : ''}
         </table>
       </div>
+
+      <Dialog open={openCancelDialog} TransitionComponent={Transition}
+        keepMounted onClose={handleCloseCancelDialog}
+      >
+        <DialogTitle>Bạn có chắc chắn muốn hủy đơn hàng?</DialogTitle>
+        <DialogActions>
+          <Button className="themeColor noneTextTransform" onClick={() => handleCancelOrder()}>Chắc chắn</Button>
+          <Button className="bgColor noneTextTransform" onClick={handleCloseCancelDialog}>Không</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   )
 }

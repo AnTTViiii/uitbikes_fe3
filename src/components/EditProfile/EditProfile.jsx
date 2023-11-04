@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import Customer, { Account } from '../Data/Customer'
 import { Alert, Button } from '@mui/material'
 import './edit-profile.css'
 import { useSelector } from 'react-redux'
@@ -95,7 +94,7 @@ const EditProfile = () => {
           ? <img src={image} alt={user.username} className="user-avatar" />
           : <AccountCircle className="user-avatar icon" />
         }
-        <Button variant="contained" component="label" className='imagePicker noneTextTransform'>
+        <Button variant="contained" component="label" className='themeColor noneTextTransform'>
           Thay đổi avatar
           <input accept="image/*" onChange={(e) => {onImageChange(e); handleUploadImg(e)}} 
             style={{ display: 'none' }} type="file" />
@@ -117,12 +116,12 @@ const EditProfile = () => {
         }
 
         <Button variant="contained" style={{ display: 'none' }} onClick={handleUpdateAvatar}
-          className='bgMainColor noneTextTransform' id='saveAvatarBtn'>Lưu</Button>
+          className='themeColor noneTextTransform' id='saveAvatarBtn'>Lưu</Button>
       </div>
       <div className="user-info">
         <p>Tên đăng nhập: <span>{user.username}</span></p>
         <p>Email: <span>{user.email}</span></p>
-        <p>Tên khách hàng: <input type='text' defaultValue={Customer.name} /></p>
+        <p>Tên khách hàng: <input type='text' defaultValue={user.customer.name} /></p>
         <p>Giới tính: 
           <div>
             <input type='radio' name="gender" value={1} defaultChecked={user.customer.gender === 1 ? true : false} />Nữ 
@@ -130,12 +129,15 @@ const EditProfile = () => {
             <input type='radio' name="gender" value={2} defaultChecked={user.customer.gender === 2 || user.customer.gender == null ? true : false}/>Khác 
           </div>
         </p>
-        <p>Ngày sinh: <input type='date' min="1930-01-01" max="2010-12-31" defaultValue={user.customer.date != null ? (user.customer.date).slice(0, 10) : user.customer.date} /></p>
+        <p>Ngày sinh: 
+          <input type='date' min="1930-01-01" max="2010-12-31" 
+            defaultValue={user.customer.date != null ? (user.customer.date).slice(0, 10) : user.customer.date} />
+        </p>
         <p>SĐT: <input type='text' defaultValue={user.customer.phone} /></p> 
         <p>Địa chỉ: <input type='text' defaultValue={user.customer.address} /></p>
         <p>CCCD: <input type='text' defaultValue={user.customer.idNumber} /></p>
         <Button variant="contained" component="label" onClick={handleUpdate}
-          className='edit-profile-btn noneTextTransform'>
+          className='themeColor noneTextTransform'>
           Cập nhật
         </Button>
       </div>

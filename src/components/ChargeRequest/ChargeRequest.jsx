@@ -2,7 +2,6 @@ import { TextField, Button, Accordion, AccordionSummary, Typography, AccordionDe
 import React, { useRef, useState } from 'react'
 import './charge-request.css'
 import { Check, Error, ExpandMoreRounded } from '@mui/icons-material'
-import userEvent from '@testing-library/user-event'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 
@@ -46,7 +45,6 @@ const ChargeRequest = () => {
     const date = new Date(dateRef.current.value)
 
     if (accountNumber === '' || money === '' || date.toString() === 'Invalid Date') {
-      console.log('Vui long dien day du!')
       setAlertError("Vui lòng điền đầy đủ thông tin!")
     } else {
       const request = {

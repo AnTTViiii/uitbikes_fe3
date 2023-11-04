@@ -45,7 +45,7 @@ const TransactionHistory = () => {
       headerClassName: 'header',
       renderCell: (params) => {
         return(
-          <>{(params.status === 3 ? '+ ' : '- ') + dot3digits(params.row.total)} đ</>
+          <>{(params.row.status === 3 ? '+ ' : '- ') + dot3digits(params.row.total)} đ {(params.row.status === 3 ? ' (hoàn)' : '')}</>
         )
       }
     }
@@ -53,9 +53,18 @@ const TransactionHistory = () => {
 
   const requestColumns = [
     {
+      field: "id",
+      headerName: "Mã nạp tiền",
+      flex: 1,
+      minWidth: 90,
+      align:'center',
+      headerClassName: 'header',
+    },
+    {
       field: "date",
       headerName: "Thời gian",
       flex: 1,
+      minWidth: 145,
       align:'center',
       headerClassName: 'header',
       renderCell: (params) => {
@@ -63,22 +72,36 @@ const TransactionHistory = () => {
       }
     },
     {
-      field: "id",
-      headerName: "Hóa đơn",
+      field: "accountNumber",
+      headerName: "Số tài khoản",
       flex: 1,
-      align:'center',
-      headerClassName: 'header',
-    },
-    {
-      field: "total",
-      headerName: "Số tiền",
-      flex: 1,
+      minWidth: 100,
       align:'center',
       headerClassName: 'header',
       renderCell: (params) => {
-        return(
-          <>{(params.status === 3 ? '+ ' : '- ') + dot3digits(params.row.total)} đ</>
-        )
+        return params.row.accountNumber
+      }
+    },
+    {
+      field: "money",
+      headerName: "Số tiền",
+      flex: 1,
+      minWidth: 115,
+      align:'center',
+      headerClassName: 'header',
+      renderCell: (params) => {
+        return dot3digits(params.row.money) + 'đ'
+      }
+    },
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      flex: 1,
+      minWidth: 100,
+      align:'center',
+      headerClassName: 'header',
+      renderCell: (params) => {
+        return getChargeRequestStatusName(params.row.status)
       }
     }
   ]
@@ -90,7 +113,7 @@ const TransactionHistory = () => {
         <p>Số dư tài khoản: {dot3digits(user.customer.balance)} đ</p>
         <div className="purchase-history">
           <p>Lịch sử thanh toán</p>
-          <div className='purchase-history-table' style={{ width: '100%' }}>
+          <div className='purchase-history-table'>
             <DataGrid
               {...invoices}
               getRowClassName={(params) =>
@@ -106,26 +129,26 @@ const TransactionHistory = () => {
               pageSizeOptions={[7, 15, 25]}
             />
           </div>
-          {/* <table>
-            <tr>
-              <th>Thời gian</th>
-              <th>Hóa đơn</th>
-              <th>Số tiền</th>
-            </tr>
-            {
-              invoices.map((item) => (
-                <tr>
-                  <td>{new Date(item.date).toLocaleString()}</td>
-                  <td>{item.id}</td>
-                  <td>{(item.status === 3 ? '+ ' : '- ') + dot3digits(item.total)} đ</td>
-                </tr>
-              ))
-            }
-          </table> */}
         </div>
         <div className="charge-history">
           <p>Lịch sử nạp tiền</p>
-          <table>
+          <div className='charge-history-table'>
+            <DataGrid
+              {...chargeList}
+              getRowClassName={(params) =>
+                params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+              }
+              rows={chargeList}
+              columns={requestColumns}
+              disableColumnMenu={true}
+              initialState={{
+                ...chargeList.initialState,
+                pagination: { paginationModel: { pageSize: 7 } },
+              }}
+              pageSizeOptions={[7, 15, 25]}
+            />
+          </div>
+          {/* <table>
             <tr>
               <th>Mã nạp tiền</th>
               <th>Thời gian</th>
@@ -144,7 +167,7 @@ const TransactionHistory = () => {
                 </tr>
               ))
             }
-          </table>
+          </table> */}
         </div>
       </div>
     </div>

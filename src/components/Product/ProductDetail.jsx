@@ -14,10 +14,12 @@ const ProductDetail = () => {
 
   const path = location.pathname.split("/");
   let name = path[2].replace(/%20/g, ' ');
-
+  
   const [data, setData] = useState([]); 
   const [details, setDetails] = useState([]);
-  const [productId, setProductId] = useState(null);
+  const [defProduct, setDefProduct] = useState([]);
+  const [productId, setProductId] = useState(path[3]);
+  const [invoiceId, setInvoiceId] = useState();
 
   useEffect(() => {
     axios.get("http://localhost:9090/api/products/detail/names/" + name)
@@ -25,7 +27,11 @@ const ProductDetail = () => {
         setData(response.data);
         setDetails(response.data.detail);
       });
-  }, [name, data, details]);
+    axios.get(`http://localhost:9090/api/products/${productId}`)
+      .then((res) => {
+        setDefProduct(res.data)
+      })
+  }, [name, data, details, productId]);
 
   const [descriptionToggle,  setDescriptionToggle] = useState(0);
   const toggleTab = (index) => {
@@ -44,9 +50,6 @@ const ProductDetail = () => {
     count = count > 1 ? count - 1 : 1;
     setCount(count);
   }
-
-  const [colorSelected, setColorSelected] = useState(0);
-  const [price, setPrice] = useState(null);
 
   const [notify, setNotify] = useState(null);
   const [actionMsg, setActionMsg] = useState(null);
@@ -71,9 +74,11 @@ const ProductDetail = () => {
 
   const handleCloseRemminderDialog = () => setOpenRemindUpdateInfoDialog(false);
 
+  const [openConfirmPurchasedDialog, setOpenConfirmPurchasedDialog] = useState(false);
+  const handleCloseConfirmPurchasedDialog = () => setOpenConfirmPurchasedDialog(false);
+
   const handlePurchased = async() => {
-    // details.map((item, idx) => idx === colorSelected && (setProductId(item.id), setPrice(item.price)))
-    let total = count * price;
+    let total = count * defProduct.price;
     if (isAuthed) {
       const cus = user.customer;
       if (!cus.phone || !cus.address || !cus.idNumber || !cus.name) {
@@ -90,18 +95,23 @@ const ProductDetail = () => {
         } else {
           const order = {
             total: total,
-            customer: cus
+            customer: cus,
+            details: [
+              {
+                product: defProduct,
+                quantity: count
+              }
+            ]
           }
-          await axios.post(`http://localhost:9090/api/invoices`, order)
+          await axios.post(`http://localhost:9090/api/invoices/create`, order)
             .then((res) => {
-              if(res.data.id !== undefined)
-                axios.put(`http://localhost:9090/api/invoices/${res.data.id}/product/${productId}/quantity/${count}`)
-                  .then((res1) => {setNofification('Đơn hàng đã được tạo.')})
-                  .catch((err) => {
-                    console.log(err);
-                    setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-                  })
-              else setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+                setNofification('Đơn hàng đã được tạo.');
+                handleCloseConfirmPurchasedDialog();
+                axios.get(`http://localhost:9090/api/accounts/${user.username}`)
+                .then((res) => {
+                  localStorage.setItem('user', JSON.stringify(res.data))
+                });
+                setTimeout(handleClose, 2500);
             }).catch((error) => {
               console.log(error);
               setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
@@ -120,70 +130,60 @@ const ProductDetail = () => {
   const handleAddToCart = async() => {
     if (isAuthed) {
       const product = { "quantity": count }
-      if (productId == null) {
-        details.map((item, idx) => idx === colorSelected && setProductId(item.id))
-      } else {
-        try {
-          await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`)
-            .then(res => {
-              if(res.data.id === undefined)
-                axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`, product)
-              else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
-              setNofification('Đã thêm vào giỏ hàng.')
-            }).catch((error) => {
-              console.log(error);
-              setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-            });
-        } catch (error) {
-          console.log(error);
-          setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-        }
-        setTimeout(handleClose, 2500);
+      try {
+        await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`)
+          .then(res => {
+            if(res.data.id === undefined)
+              axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${productId}`, product)
+            else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
+            setNofification('Đã thêm vào giỏ hàng.')
+          }).catch((error) => {
+            console.log(error);
+            setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+          });
+      } catch (error) {
+        console.log(error);
+        setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
       }
-      
+
+      setTimeout(handleClose, 2500);
     } else navigate('/signin')
   }
-
+  
   return (
     <div className='product-detail'>
       <div className="product-detail-img">
-        {
-          details.map((item, index) => index === colorSelected && (
-            <img src={item.image} alt={data.name} />
-          ))
-        } 
+        <img src={defProduct.image} alt={data.name} />
       </div>
       <div className="product-detail-title">
         <h3>{data.name}</h3>
         {
-          details.map((item, index) => index === colorSelected && (
+          details.map((item) => item.id === defProduct.id && (
             <p>{dot3digits(item.price)} đ</p>
           ))
         }
         <div className="product-color">
           {
-            details.map((item, index) => (
-              <div className={`color ${colorSelected === index ? ' active' : ''}`} 
-                  onClick={(e) => {setColorSelected(index); setProductId(item.id); setPrice(item.price)}}>
+            details.map((item) => (
+              <div className={`color ${item.id === defProduct.id ? ' active' : ''}`} 
+                  onClick={(e) => {setProductId(item.id)}}>
                 {item.color}
               </div>
             ))
           }
         </div>
         <div className="product-quantity">
-          {
-            details.map((item, index) => index === colorSelected && (
-              <><p>Kho: {item.quantity}</p>
-              <div className="counter">
-                <div onClick={decrementCount}>-</div>
-                <div>{count}</div>
-                <div onClick={() => {incrementCount(item.quantity)}}>+</div>
-              </div></>
-            ))
-          }
+          <>
+            <p>Kho: {defProduct.quantity}</p>
+            <div className="counter">
+              <div onClick={decrementCount}>-</div>
+              <div>{count}</div>
+              <div onClick={() => {incrementCount(defProduct.quantity)}}>+</div>
+            </div>
+          </>
         </div>
         <div className="shopping-button">
-          <Button variant='contained' className="bgMainColor noneTextTransform" onClick={handlePurchased}>Mua ngay</Button>
+          <Button variant='contained' className="themeColor noneTextTransform" onClick={() => setOpenConfirmPurchasedDialog(true)}>Mua ngay</Button>
           <Button variant='contained' className="add-to-cart noneTextTransform" onClick={handleAddToCart}>Thêm vào giỏ</Button>
         </div>
 
@@ -204,8 +204,18 @@ const ProductDetail = () => {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button className="bgMainColor noneTextTransform" onClick={handleNavigate}>{actionMsg}</Button>
+            <Button className="themeColor noneTextTransform" onClick={handleNavigate}>{actionMsg}</Button>
             <Button className="bgColor noneTextTransform" onClick={handleCloseRemminderDialog}>Để sau</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openConfirmPurchasedDialog} TransitionComponent={Transition}
+          keepMounted onClose={handleCloseConfirmPurchasedDialog}
+        >
+          <DialogTitle>Bạn có chắc chắn muốn đặt hàng?</DialogTitle>
+          <DialogActions>
+            <Button className="themeColor noneTextTransform" onClick={handlePurchased}>Chắc chắn</Button>
+            <Button className="bgColor noneTextTransform" onClick={handleCloseConfirmPurchasedDialog}>Hủy</Button>
           </DialogActions>
         </Dialog>
       </div>
