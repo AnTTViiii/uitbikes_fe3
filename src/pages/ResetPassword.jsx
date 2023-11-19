@@ -1,9 +1,9 @@
 import React from 'react'
-import ResetPass from '../components/ResetPassword/ResetPass'
+import ResetPasswordPage from '../components/ResetPassword/ResetPasswordPage'
 
 const ResetPassword = () => {
   return (
-    <ResetPass />
+    <ResetPasswordPage />
   )
 }
 

@@ -1,10 +1,10 @@
 import { CheckRounded, ErrorRounded, Visibility, VisibilityOff } from '@mui/icons-material';
-import { Alert, Button, Dialog, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
+import { Alert, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
 import React, { useRef, useState } from 'react'
 import './change-password.css'
 import axios from 'axios';
 const ChangePassword = () => {
-  const user = JSON.stringify(localStorage.getItem("user"))
+  const user = JSON.parse(localStorage.getItem("user"))
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
@@ -21,27 +21,39 @@ const ChangePassword = () => {
     const confirmPass = confirmPassRef.current.value
 
     if (oldPass === '' || newPass === '' || confirmPass ==='') {
-      setAlertError("Vui lòng điền đầy đủ các trường!")
+      return setAlertError("Vui lòng điền đầy đủ các trường!")
     } else {
       const checkPassword = {
         email: user.email,
         pw: oldPass
       }
+      console.log(checkPassword)
   
-      await axios.get(`http://localhost:9090/api/accounts/check-password`, checkPassword)
+      await axios.post(`http://localhost:9090/api/accounts/check-password`, checkPassword)
         .then((res) => {
           if (res.data === false) setAlertError("Mật khẩu cũ chưa đúng!")
           else {
             if (newPass === oldPass) setAlertError("Mật khẩu mới trùng với mật khẩu cũ!")
+            else if (newPass.length < 8 || newPass.length > 20) {
+              setAlertError("Mật khẩu phải chứa ít nhất 8-20 kí tự!");
+            }
+            else if (!newPass.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&+=]).{8,}$/)) {
+                setAlertError(
+                    "Mật khẩu cần chứa ít nhất 1 kí tự viết thường, 1 kí tự viết hoa, 1 kí tự đặc biệt và 1 chữ số."
+                );
+            }
             else if (newPass !== confirmPass) setAlertError("Mật khẩu xác nhận chưa khớp!")
             else {
               const account = {
                 email: user.email,
-                pw: newPassRef.current.value
+                pw: newPass
               }
+
+              console.log(account)
   
               axios.put(`http://localhost:9090/api/accounts/password`, account)
                 .then((res1) => {
+                  console.log(res1.data)
                   setShowAlert(false)
                   setNofification("Mật khẩu mới đã được cập nhật!")
                   setTimeout(handleCloseNotify, 3000)
@@ -142,7 +154,7 @@ const ChangePassword = () => {
       <Button variant='contained' className='submit-new-pass themeColor' onClick={handleChangePassword}>Cập nhật</Button>
 
       {(showAlert || showNotify) &&
-        <Alert icon={showAlert ? <ErrorRounded /> : <CheckRounded />}
+        <Alert icon={showAlert ? <ErrorRounded /> : <CheckRounded />} className='alert'
           severity={showAlert ? "error" : "success"} sx={{ width: '100%' }}>
           { notify }
         </Alert>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { Invoice } from '../Data/Customer'
 import { Transition, dot3digits, getInvoiceStatusName } from '../functions/functions'
 import './purchase-order.css'
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material'
@@ -20,7 +19,7 @@ const PurchaseOrder = () => {
   const [data, setData] = useState([]);
   useEffect(() => {
     axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/${tab}`)
-      .then((res) => setData(res.data))
+      .then((res) => setData(res.data.reverse()))
       .catch((err) => console.log(err))
   }, [tab, data])
 
@@ -47,7 +46,7 @@ export default PurchaseOrder
 
 const OrderDetail = ({item}) => {
   const user = JSON.parse(localStorage.getItem('user'))
-  
+
   const handleCancelOrder = async() => {
     await axios.put(`http://localhost:9090/api/invoices/${item.id}/status/3`)
       .then(() => {

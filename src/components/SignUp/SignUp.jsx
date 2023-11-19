@@ -142,7 +142,7 @@ const SignUp = () => {
                 </Button>
 
                 {showAlert && (
-                    <Alert
+                    <Alert className='alert'
                         icon={<Error fontSize="inherit" />}
                         severity="warning"
                         sx={{ margin: "10px 0" }}>

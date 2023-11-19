@@ -87,7 +87,7 @@ const ChargeRequest = () => {
         <Button className='charge-request-btn' onClick={handleSendRequest} variant="contained">Gửi yêu cầu</Button>
 
         {showAlert && (
-          <Alert
+          <Alert className='alert'
               icon={<Error fontSize="inherit" />}
               severity="warning"
               sx={{ margin: "10px 0" }}>

@@ -4,21 +4,73 @@
     gap: 30px;
     align-items: center;
     justify-content: center;
-    min-height: 50vh;
     height: fit-content;
+    margin: 30px auto;
+    
     >h1 {
         color: #ce252a
     }
-    > div {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        justify-content: center;
+
+    .reset-pass-body {
+        .css-1u4zpwo-MuiSvgIcon-root-MuiStepIcon-root {
+            &.Mui-active, &.Mui-completed {
+                color: #ce252a;
+            }
+        }
+
+        /* .reset-pass-complete {
+            >div {
+                text-align: center;
+                margin: 20px;
+            }
+
+            >button {
+                display: block;
+                margin-left: auto;
+            }
+        } */
+
+        .reset-pass-step {
+            padding: 20px 10px;
+
+            .reset-pass-email, .reset-pass-code {
+                margin: 5px;
+            }
+
+            .disabled-btn {
+                background-color: #c5c5c5 !important;
+                color: black !important;
+                pointer-events: none;
+            }
+
+            #success, #error {
+                display: none;
+                text-align: center;
+                margin: 20px;
+            }
+
+            #success {
+                color: rgb(60, 164, 60);
+            }
+
+            #error {
+                color: #ce252a;
+            }
+        }
+
+        .reset-pass-control-btn {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .step-completed {
+            margin-top: 20px;
+            display: flex;
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
-    .reset-pass-email, .reset-pass-code {
-        text-transform: none !important;
-    }
-    .confirm-code, #success {
-        display: none;
-    }
+    
 }

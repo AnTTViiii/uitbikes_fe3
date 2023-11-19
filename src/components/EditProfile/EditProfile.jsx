@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Alert, Button } from '@mui/material'
 import './edit-profile.css'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
-import { Check, Error, AccountCircle } from '@mui/icons-material'
+import { AccountCircle, ErrorRounded, CheckRounded } from '@mui/icons-material'
 
 const EditProfile = () => {
   const { isAuthed } = useSelector((state) => state.auth);
@@ -18,13 +18,33 @@ const EditProfile = () => {
 
   const [imgUrl, setImgUrl] = useState('');
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const [showAlert, setShowAlert] = useState(error !== null ? true : false);
-  const [showAlertSuccess, setShowAlertSuccess] = useState(success !== null ? true : false);
+  // const [error, setError] = useState(null);
+  // const [success, setSuccess] = useState(null);
+  // const [showAlert, setShowAlert] = useState(error !== null ? true : false);
+  // const [showAlertSuccess, setShowAlertSuccess] = useState(success !== null ? true : false);
+  // const setAlertError = (error) => {
+  //     setError(error);
+  //     setShowAlert(true);
+  // };
+
+  const [notify, setNotify] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showNotify, setShowNotify] = useState(false);
+  const [position, setPosition] = useState(null);
+
   const setAlertError = (error) => {
-      setError(error);
-      setShowAlert(true);
+    setNotify(error);
+    setShowAlert(true);
+  };
+
+  const setNofification = (success) => {
+      setNotify(success);
+      setShowNotify(true);
+  };
+
+  const handleCloseNotify = () => {
+    setShowAlert(false);
+    setShowNotify(false);
   };
 
   const handleUploadImg = (e) => {
@@ -40,10 +60,9 @@ const EditProfile = () => {
     axios.post(POST_URL, formdata).then((res)=>{
         console.log(res.data); 
         setImgUrl(res.data.url);
-        setError(null);
-        setShowAlert(false); 
-        setSuccess("File hình ảnh đã được tải lên.")
-        setShowAlertSuccess(true);
+        setShowAlert(false);
+        setPosition(0);
+        setNofification("File hình ảnh đã được tải lên.")
         document.getElementById('saveAvatarBtn').style.display = "block";
     });
   }
@@ -57,30 +76,50 @@ const EditProfile = () => {
           .then((res1) => {localStorage.setItem('user', JSON.stringify(res1.data))})
           .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
         document.getElementById('saveAvatarBtn').style.display = "none";
-        setSuccess("Ảnh đại diện đã được cập nhật!")
-        setShowAlertSuccess(true);
-        setTimeout(() => {
-          setSuccess(null)
-          setShowAlertSuccess(false)
-        }, 3000)
+        setShowAlert(false)
+        setNofification("Ảnh đại diện đã được cập nhật!")
+        setTimeout(() => { handleCloseNotify() }, 3000)
       })
       .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
   }
 
+  const nameRef = useRef();
+  const phoneRef = useRef();
+  const addressRef = useRef();
+  const dobRef = useRef();
+  const idNumberRef = useRef();
+  const [gender, setGender] = useState(user.customer.gender);
+  const handleChangeGender = e => {
+    setGender(e.target.value);
+  }
+
   const handleUpdate = async() => {
-    const customer = { 
-      "avatar": imgUrl 
+    const name = nameRef.current.value;
+    const phone = phoneRef.current.value;
+    const address = addressRef.current.value;
+    const dob = new Date(dobRef.current.value);
+    const idNumber = idNumberRef.current.value;
+    const cus = user.customer;
+
+    const customer = {
+      "id": cus.id,
+      "name": name !== '' ? name : cus.name,
+      "address": address !== '' ? address : cus.address,
+      "phone": phone !== '' ? phone : cus.phone,
+      "date": dob.toString() !== 'Invalid Date' ? dob : new Date(cus.date),
+      "registerDate": cus.registerDate,
+      "balance": cus.balance,
+      "gender": gender,
+      "idNumber": idNumber !== '' ? idNumber : cus.idNumber
     }
 
     axios.put(`http://localhost:9090/api/customers/${user.username}`, customer)
       .then((res) => {
         localStorage.setItem('user', JSON.stringify(res.data))
-        setSuccess("Thông tin đã được cập nhật!")
-        setShowAlertSuccess(true);
-        setTimeout(() => {
-          setSuccess(null)
-          setShowAlertSuccess(false)
-        }, 3000)
+        setShowAlert(false)
+        setPosition(1)
+        setNofification("Thông tin đã được cập nhật!")
+        setTimeout(() => { handleCloseNotify() }, 3000)
       })
       .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
   }
@@ -100,18 +139,10 @@ const EditProfile = () => {
             style={{ display: 'none' }} type="file" />
         </Button>
 
-        {showAlert && 
-          <Alert icon={<Error fontSize="inherit" />}
-            severity="warning" sx={{ margin: "20px 0" }}
-          >
-            {error}
-          </Alert>
-        }
-        {showAlertSuccess && 
-          <Alert icon={<Check fontSize="inherit" />}
-            severity="success" sx={{ margin: "20px 0" }}
-          >
-            {success}
+        {(showAlert || showNotify) && position === 0 &&
+          <Alert icon={showAlert ? <ErrorRounded /> : <CheckRounded />} className='alert'
+            severity={showAlert ? "error" : "success"} sx={{ width: '100%' }}>
+            { notify }
           </Alert>
         }
 
@@ -121,25 +152,32 @@ const EditProfile = () => {
       <div className="user-info">
         <p>Tên đăng nhập: <span>{user.username}</span></p>
         <p>Email: <span>{user.email}</span></p>
-        <p>Tên khách hàng: <input type='text' defaultValue={user.customer.name} /></p>
+        <p>Tên khách hàng: <input ref={nameRef} type='text' defaultValue={user.customer.name} /></p>
         <p>Giới tính: 
-          <div>
-            <input type='radio' name="gender" value={1} defaultChecked={user.customer.gender === 1 ? true : false} />Nữ 
-            <input type='radio' name="gender" value={0} defaultChecked={user.customer.gender === 0 ? true : false}/>Nam
-            <input type='radio' name="gender" value={2} defaultChecked={user.customer.gender === 2 || user.customer.gender == null ? true : false}/>Khác 
+          <div> 
+            <input type='radio' name='gender' value={0} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 0 ? true : false}/>Nam
+            <input type='radio' name='gender' value={1} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 1 ? true : false} />Nữ
+            <input type='radio' name='gender' value={2} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 2 || gender == null ? true : false}/>Khác 
           </div>
         </p>
         <p>Ngày sinh: 
-          <input type='date' min="1930-01-01" max="2010-12-31" 
+          <input ref={dobRef} type='date' min="1930-01-01" max="2010-12-31" 
             defaultValue={user.customer.date != null ? (user.customer.date).slice(0, 10) : user.customer.date} />
         </p>
-        <p>SĐT: <input type='text' defaultValue={user.customer.phone} /></p> 
-        <p>Địa chỉ: <input type='text' defaultValue={user.customer.address} /></p>
-        <p>CCCD: <input type='text' defaultValue={user.customer.idNumber} /></p>
+        <p>SĐT: <input ref={phoneRef} type='text' defaultValue={user.customer.phone} /></p> 
+        <p>Địa chỉ: <input ref={addressRef} type='text' defaultValue={user.customer.address} /></p>
+        <p>CCCD: <input ref={idNumberRef} type='text' defaultValue={user.customer.idNumber} /></p>
         <Button variant="contained" component="label" onClick={handleUpdate}
           className='themeColor noneTextTransform'>
           Cập nhật
         </Button>
+
+        {(showAlert || showNotify) && position === 1 &&
+        <Alert className='alert' icon={showAlert ? <ErrorRounded /> : <CheckRounded />}
+          severity={showAlert ? "error" : "success"} sx={{ width: '100%' }}>
+          { notify }
+        </Alert>
+      }
       </div>
     </div>
     </>

@@ -11,11 +11,11 @@ const TransactionHistory = () => {
 
   useEffect(() => {
     axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/-1`)
-      .then((res) => { setInvoices(res.data) })
+      .then((res) => { setInvoices(res.data.reverse()) })
       .catch((err) => console.log(err))
 
     axios.get(`http://localhost:9090/api/requests/customer/${user.customer.id}`)
-      .then((res) => { setChargeList(res.data) })
+      .then((res) => { setChargeList(res.data.reverse()) })
       .catch((err) => console.log(err))
   }, [])
 
@@ -148,26 +148,6 @@ const TransactionHistory = () => {
               pageSizeOptions={[7, 15, 25]}
             />
           </div>
-          {/* <table>
-            <tr>
-              <th>Mã nạp tiền</th>
-              <th>Thời gian</th>
-              <th>Số tài khoản</th>
-              <th>Số tiền</th>
-              <th>Trạng thái</th>
-            </tr>
-            {
-              chargeList.map((item) => (
-                <tr>
-                  <td>{item.id}</td>
-                  <td>{new Date(item.date).toLocaleString()}</td>
-                  <td>{item.accountNumber}</td>
-                  <td>{dot3digits(item.money)} đ</td>
-                  <td>{getChargeRequestStatusName(item.status)}</td>
-                </tr>
-              ))
-            }
-          </table> */}
         </div>
       </div>
     </div>
