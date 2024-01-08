@@ -30,7 +30,7 @@ const NavItem = [
     {
         link: '/user',
         section: 'user',
-        icon: user !== null ? (user.avatar !== null ? <img src={user.avatar} alt="" /> : <AccountCircle />) : <AccountCircle />,
+        icon: user !== null ? (user.avatar !== null ? <img className="avatar" src={user.avatar} alt="" /> : <AccountCircle />) : <AccountCircle />,
         text: user !== null ? user.username : ''
     }
 ]

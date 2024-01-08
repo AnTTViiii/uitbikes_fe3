@@ -14,12 +14,12 @@ const Notify = () => {
   useEffect(() => {
     axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/-1`)
       .then((res) => {
-        setData(res.data);
+        setData(res.data.reverse());
       })
       .catch((error) => {
           console.log(error);
       });
-  }, []);
+  }, [data]);
   console.log(data)
 
   return (

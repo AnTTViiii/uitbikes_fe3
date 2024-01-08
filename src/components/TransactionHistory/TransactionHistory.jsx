@@ -15,9 +15,17 @@ const TransactionHistory = () => {
       .catch((err) => console.log(err))
 
     axios.get(`http://localhost:9090/api/requests/customer/${user.customer.id}`)
-      .then((res) => { setChargeList(res.data.reverse()) })
+      .then((res) => { 
+        setChargeList(res.data.reverse()) 
+
+        axios.get(`http://localhost:9090/api/accounts/${user.username}`)
+          .then((res) => { localStorage.setItem('user', JSON.stringify(res.data)) })
+          .catch((err)=> console.log(err))
+          
+      })
       .catch((err) => console.log(err))
-  }, [])
+
+  }, [invoices, chargeList, user.customer.id, user.username])
 
   const invoiceColumns = [
     {

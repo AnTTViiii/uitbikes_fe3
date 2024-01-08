@@ -56,7 +56,7 @@ const ChangePassword = () => {
                   console.log(res1.data)
                   setShowAlert(false)
                   setNofification("Mật khẩu mới đã được cập nhật!")
-                  setTimeout(handleCloseNotify, 3000)
+                  setTimeout(handleCloseNotify, 1500)
                 })
                 .catch((err) => {
                   console.log(err)

@@ -29,10 +29,30 @@
             }
         }
 
+        .inbox-chat {
+            position: fixed;
+            bottom: 4rem;
+            right: 1.5vw;
+            z-index: 10;
+            width: 2.1em;
+            height: 2.1em;
+
+            &.chat-closed {
+                background-color: #ce252a;
+                color: white;
+            }
+
+            &.chat-opened {
+                color: #ce252a;
+                background-color: white;
+                border: 1px solid #ce252a;
+            }
+        }
+
         .scroll-to-top {
             position: fixed;
-            bottom: 2vw;
-            right: 2.5vw;
+            bottom: 0.6rem;
+            right: 1.5vw;
             z-index: 10;
             background-color: #c5c5c5;
             width: 2em;

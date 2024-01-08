@@ -1,7 +1,7 @@
 import React from 'react'
 import ProductItem from '../Product/ProductItem'
 import { Button } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import queryString from 'query-string'
 import SearchFilter from './SearchFilter'
 import { useEffect } from 'react'
@@ -10,7 +10,8 @@ import axios from 'axios'
 
 const Search = () => {
     const [data, setData] = useState([]); 
-
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const searchParams = new URLSearchParams(window.location.search);
         if (!searchParams.has('s') && !searchParams.has('f')) navigate('/')
@@ -38,17 +39,15 @@ const Search = () => {
                 "colorArray": params[6].split("=")[1] === '' ? [] : (params[6].split("=")[1].length === 0 ? params[6].split("=")[1].split() : params[6].split("=")[1].split(","))
             }
 
-            console.log(filter)
-
             axios.post(`http://localhost:9090/api/products/search`, filter)
             .then((res) => {
                 setData(res.data)
             })
             .catch((err) => console.log(err))
         }
-    }, [data]);
+    }, [data, navigate]);
 
-    const navigate = useNavigate();
+    
     const handleRemoveFilter = (e) => {
         e.preventDefault();
         const query = queryString.stringify({ s: '' });

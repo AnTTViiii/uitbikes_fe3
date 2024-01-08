@@ -9,12 +9,12 @@ const Product = ({type}) => {
   useEffect(() => {
     axios.get(`http://localhost:9090/api/products/details/type/${type}`)
       .then(res => {
-        setData(res.data);
+        setData(res.data.reverse());
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [type]);
+  }, [type, data]);
 
   return (
     <div className='product'>

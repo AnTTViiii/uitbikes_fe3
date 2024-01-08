@@ -44,4 +44,11 @@
         --gap: 10px;
         --num-cols: 3;
     }
+
+    @media screen and (max-width: 650px) {
+        display: flex;
+        .banner2, .banner3 {
+            display: none;
+        }
+    }
 }

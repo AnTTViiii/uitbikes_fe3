@@ -42,6 +42,10 @@ const SignUp = () => {
             return setAlertError("Vui lòng nhập đầy đủ thông tin!");
         }
 
+        if (!email.match(/[@.]/g)) {
+            return setAlertError("Email chưa đúng định dạng!");
+        }
+
         if (password.length < 8 || password.length > 20) {
             return setAlertError("Mật khẩu phải chứa ít nhất 8-20 kí tự!");
         }
@@ -63,16 +67,33 @@ const SignUp = () => {
                 username: username
             };
 
-            await axios.get('http://localhost:9090/api/accounts/' + user.username)
+            await axios.get('http://localhost:9090/api/accounts/username/' + user.username)
                 .then(res => {
-                    if(res.data.username !== undefined)
-                        setAlertError(res.data.username + ' đã tồn tại!');
+                    if(res.data === true)
+                        setAlertError('Tên đăng nhập ' + user.username + ' đã tồn tại!');
                     else {
-                        axios.post('http://localhost:9090/api/accounts', user);
-                        setError(null);
-                        setShowAlert(false);
-                        alert("Đăng ký tài khoản thành công!");
-                        navigate("/signin");
+                        axios.get('http://localhost:9090/api/accounts/email/' + user.email)
+                            .then(res => {
+                                if(res.data === true)
+                                    setAlertError('Email ' + user.email + ' đã tồn tại!');
+                                else {
+                                    axios.post('http://localhost:9090/api/accounts', user)
+                                        .then(() => {
+                                            setError(null);
+                                            setShowAlert(false);
+                                            alert("Đăng ký tài khoản thành công!");
+                                            navigate("/signin");
+                                        })
+                                        .catch(error => {
+                                            console.log(error);
+                                            setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+                                        });
+                                }
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+                            });
                     }
                 })
                 .catch(error => {

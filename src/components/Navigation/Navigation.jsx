@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import queryString from 'query-string'
-import logo from '../../assets/images/uit_bikes_logo.svg';
 import NavItem from './NavItem';
 import './navigation.css'
 import { IconButton, Paper, InputBase, Badge } from '@mui/material';
@@ -66,7 +65,7 @@ const Navigation = () => {
         <div id='nav' className='nav'>
             <div className='nav-logo'>
                 <Link to={'/'}>
-                    <img src={logo} alt='UIT Bikes logo' className='logo' />
+                    <img src={"https://res.cloudinary.com/dpwehcnso/image/upload/v1702977636/uitbikes/fe3_logo_gmnlgo.png"} alt='UIT Bikes logo' className='logo' />
                 </Link>
                 <div className="nav-toggle" >
                     {toggle ? <Menu onClick={openMenu} /> : <Clear onClick={closeMenu}/>}

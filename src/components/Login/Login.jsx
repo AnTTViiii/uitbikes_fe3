@@ -76,6 +76,7 @@ const Login = () => {
             });
     };
     return (
+        <div className="login-bg">
         <div className='login'>
             <h3>Chào mừng trở lại với UIT Bikes!</h3>
             <TextField inputRef={emailRef} fullWidth id="outlined-basic" className='login-email' 
@@ -120,6 +121,7 @@ const Login = () => {
             )}
 
             <p>Chưa có tài khoản? <Link to={'/register'}>Đăng ký ngay!</Link></p>
+        </div>
         </div>
     )
 }

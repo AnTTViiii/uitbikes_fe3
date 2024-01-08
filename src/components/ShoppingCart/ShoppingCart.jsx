@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Cart from '../Data/Cart'
 import { Transition, dot3digits } from '../functions/functions';
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton } from '@mui/material';
 import { DeleteForeverRounded } from '@mui/icons-material';
-import Customer from '../Data/Customer'
 import { getItemQuantity } from '../functions/functions';
 import './shopping-cart.css'
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,8 +21,6 @@ const ShoppingCart = () => {
     } else {
       setListProducts(listProducts.filter((product) => product.cart_id !== item.cart_id),);
     }
-
-    console.log(listProducts);
   }
 
   useEffect(() => {
@@ -34,7 +30,7 @@ const ShoppingCart = () => {
         setCartQty(getItemQuantity(res.data))
       })
       .catch((err) => console.log(err))
-  }, [data, cartQty]);
+  }, [data, cartQty, user.customer.id]);
 
   return (
     <div className='shopping-cart'>
@@ -46,7 +42,7 @@ const ShoppingCart = () => {
         {
           data.map((item) => (
             <div className='item-row'>
-              <input type='checkbox' value={(listProducts)} onChange={(e) => {pushToBuyList(e, {item})}} />
+              <input type='checkbox' className={item.product.quantity === 0 ? 'pointer-events-none' : ''} value={(listProducts)} onChange={(e) => {pushToBuyList(e, {item})}} />
               <CartItem item={item} />
             </div>
           ))
@@ -66,13 +62,11 @@ export const CartItem = ({item}) => {
   let [count, setCount] = useState(item.quantity);
 
   function incrementCount(x) {
-      count = count < x ? count + 1 : x;
-      setCount(count);
+      setCount(count < x ? count + 1 : x);
   }
 
   function decrementCount() {
-      count = count > 1 ? count - 1 : 1;
-      setCount(count);
+      setCount(count > 1 ? count - 1 : 1);
   }
 
   const [open, setOpen] = useState(false);
@@ -87,7 +81,9 @@ export const CartItem = ({item}) => {
   }
 
   const handleIncreaseQty = async(num) => {
-    await axios.put(`http://localhost:9090/api/carts/${item.id}/quantity/${item.quantity+num}`)
+    if ((count > 1 && num === -1) || (count >= 1 && num === 1)) {
+      await axios.put(`http://localhost:9090/api/carts/${item.id}/quantity/${item.quantity+num}`)
+    }
   }
 
   return (
@@ -102,12 +98,16 @@ export const CartItem = ({item}) => {
           <p>{dot3digits(item.product.price)} đ</p>
       </div>
       
-      <div className="counter">
+      <div className={`cart-item-qty ${item.product.quantity === 0 ? 'sold-out' : ''}`}>
+        <div className="counter">
           <div onClick={() => {decrementCount(); handleIncreaseQty(-1)}}>-</div>
-          <div>{count}</div>
+          <div>{item.product.quantity === 0 ? 0 : count}</div>
           <div onClick={() => {incrementCount(item.product.quantity); handleIncreaseQty(1)}}>+</div>
-      </div>
+        </div>
 
+        {item.product.quantity === 0 ? <div className='txt-danger'>Hết hàng</div> : ''}
+      </div>
+      
       <div className="total">{dot3digits(item.product.price * count)} đ</div>
 
       <IconButton className='cart-item-remove' onClick={() => setOpen(true)}>
@@ -212,7 +212,10 @@ export const SummaryInvoice = ({item}) => {
       <hr/>
       <p>Tổng cộng: <span>{dot3digits(getTotal(item)+250000)} đ</span></p>
       <p>Số dư: <span>{dot3digits(user.customer.balance)} đ</span></p>
-      <Button className='themeColor noneTextTransform' onClick={() => handleOpenConfirmPurchasedDialog(user.customer.balance, getTotal(item))}>Thanh toán</Button>
+      <Button className='themeColor noneTextTransform' 
+          onClick={() => handleOpenConfirmPurchasedDialog(user.customer.balance, getTotal(item))}>
+            Thanh toán
+      </Button>
 
       <Dialog open={open} TransitionComponent={Transition}
         keepMounted onClose={handleClose}

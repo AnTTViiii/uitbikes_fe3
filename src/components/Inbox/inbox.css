@@ -1,0 +1,83 @@
+.inbox {
+    position: fixed;
+    bottom: 7.5rem;
+    right: 1.5vw;
+    background-color: white;
+    border: 2px solid #ce252a;
+    border-radius: 15px;
+    width: 300px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 10px;
+    z-index: 10;
+
+    transform: scale(0);
+    transform-origin: bottom right;
+    animation: appear .3s ease-in-out forwards;
+
+    .inbox-header {
+        background-color: #ce252a;
+        color: white;
+        font-weight: 700;
+        padding: 10px;
+        border-radius: 16px 16px 0 0;
+        margin-top: -11px;
+        margin-left: -11px;
+        width: calc(100% + 22px);
+    }
+
+    .conversation {
+        height: 80%;
+        overflow: hidden;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .my-message {
+            background-color: #ce252a;
+            color: white;
+            border-radius: 20px;
+            padding: 10px 15px;
+            max-width: 85%;
+            margin-left: auto;
+        }
+
+        .admin-message {
+            background-color: #f5f5f5;
+            color: black;
+            border-radius: 20px;
+            padding: 10px 15px;
+            max-width: 85%;
+            margin-right: auto;
+        }
+
+        .lastMessage {
+            height: 1px;
+        }
+    }
+
+    .send-text-section {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        
+        >button {
+            background-color: #ce252a;
+            width: fit-content;
+            aspect-ratio: 1;
+            min-width: fit-content !important;
+            padding: 8px !important;
+            border-radius: 50%;
+        }
+    }
+}
+
+@keyframes appear {
+    0%   { transform: scale(0); }
+    100% { transform: scale(1); }
+}

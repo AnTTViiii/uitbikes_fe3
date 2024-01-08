@@ -164,7 +164,7 @@ const SearchFilter = () => {
                         <Slider
                             onChange={handleChangeCC}
                             min={ccRange[0]} max={ccRange[1]}
-                            defaultValue={ccRange[1]}
+                            value={ccRange[1]}
                             step={1} color='error'
                         />
                     </div>

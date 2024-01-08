@@ -28,4 +28,14 @@
         left: 15px;
         color: #14185e;
     }
+    .template-navigate {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+
+        .icon-btn {
+            width: 55px;
+            height: 55px;
+        }
+    }
 }

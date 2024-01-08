@@ -1,13 +1,18 @@
 .login {
     width: 50%;
     min-width: 300px;
-    margin: 50px auto;
+    margin: 20px auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* background-color: rgba(243, 241, 250, 0.847); */
+    border-radius: 20px;
+    padding: 50px;
+
     .login-email, .login-password {
         margin: 10px 0;
     }
+
     .login-submit {
         width: 120px;
         min-width: fit-content;
@@ -27,5 +32,18 @@
     }
     >p>a {
         color:#ce252a;
+    }
+}
+
+/* .login-bg */
+.HinhnenLogin {
+    background: url('https://res.cloudinary.com/dpwehcnso/image/upload/v1697439050/uitbikes/UITBikes_banner2_gcmaa6.png') repeat-x center center fixed;
+    background-size: cover;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+
+    @media screen and (max-width: 800px) {
+        background-size: cover;
     }
 }

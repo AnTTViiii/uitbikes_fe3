@@ -19,7 +19,6 @@ const ProductDetail = () => {
   const [details, setDetails] = useState([]);
   const [defProduct, setDefProduct] = useState([]);
   const [productId, setProductId] = useState(path[3]);
-  const [invoiceId, setInvoiceId] = useState();
 
   useEffect(() => {
     axios.get("http://localhost:9090/api/products/detail/names/" + name)
@@ -111,7 +110,7 @@ const ProductDetail = () => {
                 .then((res) => {
                   localStorage.setItem('user', JSON.stringify(res.data))
                 });
-                setTimeout(handleClose, 2500);
+                setTimeout(() => { handleClose(); navigate("/user/purchase"); }, 1500);
             }).catch((error) => {
               console.log(error);
               setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
@@ -172,20 +171,26 @@ const ProductDetail = () => {
             ))
           }
         </div>
-        <div className="product-quantity">
-          <>
-            <p>Kho: {defProduct.quantity}</p>
-            <div className="counter">
-              <div onClick={decrementCount}>-</div>
-              <div>{count}</div>
-              <div onClick={() => {incrementCount(defProduct.quantity)}}>+</div>
-            </div>
-          </>
-        </div>
-        <div className="shopping-button">
-          <Button variant='contained' className="themeColor noneTextTransform" onClick={() => setOpenConfirmPurchasedDialog(true)}>Mua ngay</Button>
-          <Button variant='contained' className="add-to-cart noneTextTransform" onClick={handleAddToCart}>Thêm vào giỏ</Button>
-        </div>
+        {
+          defProduct.quantity === 0 ? (
+            <div className='txt-danger'>Hết hàng</div>
+          ) : (
+            <>
+              <div className="product-quantity">
+                <p>Kho: {defProduct.quantity}</p>
+                <div className="counter">
+                  <div onClick={decrementCount}>-</div>
+                  <div>{count}</div>
+                  <div onClick={() => {incrementCount(defProduct.quantity)}}>+</div>
+                </div>
+              </div>
+              <div className="shopping-button">
+                <Button variant='contained' disabled={!isAuthed} className="themeColor noneTextTransform" onClick={() => setOpenConfirmPurchasedDialog(true)}>Mua ngay</Button>
+                <Button variant='contained' className="add-to-cart noneTextTransform" onClick={handleAddToCart}>Thêm vào giỏ</Button>
+              </div>
+            </>
+          )
+        }
 
         <Dialog open={showAlert ? showAlert : showNotify}
                 onClose={handleClose}>

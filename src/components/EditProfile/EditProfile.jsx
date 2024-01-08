@@ -78,7 +78,7 @@ const EditProfile = () => {
         document.getElementById('saveAvatarBtn').style.display = "none";
         setShowAlert(false)
         setNofification("Ảnh đại diện đã được cập nhật!")
-        setTimeout(() => { handleCloseNotify() }, 3000)
+        setTimeout(() => { handleCloseNotify() }, 2000)
       })
       .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
   }
@@ -119,7 +119,7 @@ const EditProfile = () => {
         setShowAlert(false)
         setPosition(1)
         setNofification("Thông tin đã được cập nhật!")
-        setTimeout(() => { handleCloseNotify() }, 3000)
+        setTimeout(() => { handleCloseNotify() }, 2000)
       })
       .catch((err) => {console.log(err); setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.')})
   }
@@ -154,7 +154,7 @@ const EditProfile = () => {
         <p>Email: <span>{user.email}</span></p>
         <p>Tên khách hàng: <input ref={nameRef} type='text' defaultValue={user.customer.name} /></p>
         <p>Giới tính: 
-          <div> 
+          <div className='gender-radio-group'> 
             <input type='radio' name='gender' value={0} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 0 ? true : false}/>Nam
             <input type='radio' name='gender' value={1} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 1 ? true : false} />Nữ
             <input type='radio' name='gender' value={2} onChange={(e) => handleChangeGender(e)} defaultChecked={gender === 2 || gender == null ? true : false}/>Khác 

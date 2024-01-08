@@ -20,6 +20,7 @@
 
         >a, .logo {
             height: 5.5rem;
+            object-fit: contain;
         }
 
         .nav-toggle {
@@ -67,7 +68,7 @@
                     width: 30px;
                     height: 30px;
                     border-radius: 50%;
-                    object-fit: contain;
+                    object-fit: cover !important;
                     border: 1.5px solid #ce252a;
                 }
             }
