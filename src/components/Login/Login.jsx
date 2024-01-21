@@ -63,6 +63,7 @@ const Login = () => {
                                 dispatch(authActions.setAuth(account));
 
                                 navigate("/");
+                                window.location.reload()
                             }
                         }, fail => {
                             console.log(fail);

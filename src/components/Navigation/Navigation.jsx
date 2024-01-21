@@ -59,7 +59,7 @@ const Navigation = () => {
                     console.log(error);
                 });
         }
-    }, [cartItemQty]);
+    }, [cartItemQty, isAuthed, user.customer.id]);
 
     return (
         <div id='nav' className='nav'>

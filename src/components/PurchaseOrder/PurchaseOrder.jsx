@@ -21,7 +21,7 @@ const PurchaseOrder = () => {
     axios.get(`http://localhost:9090/api/invoices/customer/${user.customer.id}/status/${tab}`)
       .then((res) => setData(res.data.reverse()))
       .catch((err) => console.log(err))
-  }, [tab, data])
+  }, [tab, data, user.customer.id])
 
   return (
     <div className='purchase-order'>
@@ -66,7 +66,7 @@ const OrderDetail = ({item}) => {
   return (
     <div>
       <div className="order-status">
-        <p>Hóa đơn #{item.id}</p>
+        <p>Hóa đơn #{item.id} đặt lúc {new Date(item.date).toLocaleString()}</p>
         <p>{getInvoiceStatusName(item.status)}</p>
       </div>
       <div className="order-products">

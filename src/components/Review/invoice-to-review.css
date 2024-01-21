@@ -1,0 +1,64 @@
+.unreviewed-list {
+    .unreviewed {
+        background-color: white;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+        .unreviewed-header {
+            margin-bottom: 10px;
+
+            >span {
+                color: #ce252a;
+                font-weight: 650;
+            }
+        }
+
+        .unreviewed-body {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+
+            .unreviewed-left {
+                display: flex;
+                gap: 15px;
+                border-right: 1px solid silver;
+
+                >img {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: contain;
+                }
+
+                .unreviewed-detail {
+                    >p:first-child {
+                        font-weight: 650;
+                    }
+
+                    >p:last-child {
+                        color: silver;
+                    }
+                }
+            }
+
+            .unreviewed-right {
+                padding: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                >button {
+                    background-color: #ce252a;
+                    text-transform: none;
+                }
+            }
+        }
+    }
+}
+
+.empty-notice {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 20vh;
+}

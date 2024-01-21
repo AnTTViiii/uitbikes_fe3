@@ -59,7 +59,9 @@ const ChargeRequest = () => {
           setShowAlert(false)
           setNofification("Đã gửi yêu cầu! Quá trình xét duyệt sẽ mất khoảng 2-3 ngày.")
           setOpenSuccessDialog(true);
-          console.log(request)
+          setAccNum("")
+          moneyRef.current.value = ''
+          dateRef.current.value = ''
           setTimeout(handleCloseSuccessDialog, 3000)
         })
         .catch((err) => {

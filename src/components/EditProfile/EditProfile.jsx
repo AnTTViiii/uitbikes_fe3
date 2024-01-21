@@ -18,15 +18,6 @@ const EditProfile = () => {
 
   const [imgUrl, setImgUrl] = useState('');
 
-  // const [error, setError] = useState(null);
-  // const [success, setSuccess] = useState(null);
-  // const [showAlert, setShowAlert] = useState(error !== null ? true : false);
-  // const [showAlertSuccess, setShowAlertSuccess] = useState(success !== null ? true : false);
-  // const setAlertError = (error) => {
-  //     setError(error);
-  //     setShowAlert(true);
-  // };
-
   const [notify, setNotify] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [showNotify, setShowNotify] = useState(false);

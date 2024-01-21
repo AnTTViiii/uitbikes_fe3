@@ -70,3 +70,12 @@ export const getInvoiceStatusNotify = (status) => {
 export const getGender = (gender) => {
     return gender === 0 ? 'Nam' : (gender === 1 ? 'Nữ' : 'Khác')
 }
+
+export const getAverageRating = (data) => {
+    let rating = 0
+    data.map((item) => {
+        rating += item.rate
+    })
+
+    return Math.round(rating / data.length * 100.0) / 100.0
+}

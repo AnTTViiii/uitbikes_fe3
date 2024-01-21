@@ -4,7 +4,8 @@ import Transaction from '../TransactionHistory/TransactionHistory'
 import ChargeRequest from '../ChargeRequest/ChargeRequest'
 import PurchaseOrder from '../PurchaseOrder/PurchaseOrder'
 import UserProfile from '../UserProfile/UserProfile'
-import { AccountBalanceWalletRounded, ManageAccountsRounded, PasswordRounded, PaymentRounded, PersonRounded, ReceiptLongRounded } from '@mui/icons-material'
+import { AccountBalanceWalletRounded, ManageAccountsRounded, PasswordRounded, PaymentRounded, PersonRounded, RateReviewRounded, ReceiptLongRounded } from '@mui/icons-material'
+import ReviewTabs from '../Review/ReviewTabs'
 
 export const ProfileItem = [
     {
@@ -48,5 +49,12 @@ export const ProfileItem = [
       url: '/user/purchase',
       section: 'purchase',
       page: PurchaseOrder
+    },
+    {
+      name: 'Đánh giá',
+      icon: <RateReviewRounded />,
+      url: '/user/review',
+      section: 'review',
+      page: ReviewTabs
     }
 ];

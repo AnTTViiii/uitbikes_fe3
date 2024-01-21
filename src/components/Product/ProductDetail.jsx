@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Transition, dot3digits } from '../functions/functions'
+import { Transition, dot3digits, getAverageRating } from '../functions/functions'
 import './product-detail.css'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, Tooltip } from '@mui/material'
 
 const ProductDetail = () => {
   const location = useLocation();
@@ -81,12 +81,14 @@ const ProductDetail = () => {
     if (isAuthed) {
       const cus = user.customer;
       if (!cus.phone || !cus.address || !cus.idNumber || !cus.name) {
+        handleCloseConfirmPurchasedDialog()
         setNotify('Vui lòng cập nhật đầy đủ thông tin cá nhân để tiếp tục mua hàng!')
         setLink('/user/edit')
         setActionMsg('Cập nhật')
         setOpenRemindUpdateInfoDialog(true);
       } else {
         if (cus.balance < total) {
+          handleCloseConfirmPurchasedDialog()
           setNotify('Số dư của khách hàng không đủ! Vui lòng nạp thêm để tiếp tục thanh toán.')
           setLink('/user/charge')
           setActionMsg('Nạp tiền')
@@ -148,6 +150,16 @@ const ProductDetail = () => {
       setTimeout(handleClose, 2500);
     } else navigate('/signin')
   }
+
+  const [ratingData, setRatingData] = useState([])
+
+  useEffect(() => {
+    axios.get(`http://localhost:9090/api/reviews/product/name/${name}`)
+      .then((res) => {
+        setRatingData(res.data)
+      })
+      .catch((err) => { console.log(err) })
+  }, [name, ratingData])
   
   return (
     <div className='product-detail'>
@@ -156,6 +168,11 @@ const ProductDetail = () => {
       </div>
       <div className="product-detail-title">
         <h3>{data.name}</h3>
+
+        <Tooltip className='product-detail-rating' title={getAverageRating(ratingData) + '⭐'} placement="top-start">
+          <Rating name="read-only" value={getAverageRating(ratingData)} readOnly />
+          <span>({ratingData.length} đánh giá)</span>
+        </Tooltip>
         {
           details.map((item) => item.id === defProduct.id && (
             <p>{dot3digits(item.price)} đ</p>
@@ -233,6 +250,7 @@ const ProductDetail = () => {
           <Page item={data} />
         </div>
       </div>
+      <ProductReview name={name} />
     </div>
   )
 }
@@ -272,4 +290,39 @@ export const ProductSpecification = ({item}) => {
   )
 }
 
+export const ProductReview = ({name}) => {
+  const [data, setData] = useState([])
 
+  useEffect(() => {
+    axios.get(`http://localhost:9090/api/reviews/product/name/${name}`)
+      .then((res) => {
+        setData(res.data)
+      })
+      .catch((err) => { console.log(err) })
+  }, [name, data])
+
+  return (
+    <div className='product-reviews'>
+      <div className='product-reviews-title'>Đánh giá ({data && data.length})</div>
+      <div className='product-reviews-list'>
+        {data && data.map((item) => (
+          <div className='product-review-item'>
+            <p>{item.username} <span>{new Date(item.timestamp).toLocaleDateString()}</span></p>
+            <div>
+              Màu: {item.product.color}
+              <span>
+                <Rating name="read-only" value={item.rate} readOnly />
+              </span>
+            </div>
+            <p>{item.text}</p>
+            <div className="review-history-imgs">
+              {item.images.map((image) => (
+                  <img src={image.image} alt='review-img' />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,17 @@
+.review-tabs {
+    .review-navigation {
+        display: flex;
+        margin-bottom: 20px;
+
+        .review-tab-item {
+            padding: 5px 20px;
+            border-bottom: 2px solid transparent;
+            width: 180px;
+            text-align: center;
+
+            &.active {
+                border-bottom: 2px solid #ce252a;
+            }
+        }
+    }
+}

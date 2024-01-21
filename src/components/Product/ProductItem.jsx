@@ -32,16 +32,24 @@ const ProductItem = ({item}) => {
     if (isAuthed) {
       const product = { "quantity": 1 }
       try {
-        await axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`)
-          .then(res => {
-            if(res.data.id === undefined)
-              axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`, product)
-            else axios.put(`http://localhost:9090/api/carts/${res.data.id}/quantity/${res.data.quantity + 1}`)
-            setNofification('Đã thêm vào giỏ hàng.')
-          }).catch((error) => {
-            console.log(error);
-            setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
-          });
+        await axios.get(`http://localhost:9090/api/products/${item.id}`)
+          .then((res) => {
+            if (res.data.quantity > 0) {
+              axios.get(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`)
+                .then(res1 => {
+                  if(res1.data.id === undefined) 
+                    axios.post(`http://localhost:9090/api/carts/customer/${user.customer.id}/product/${item.id}`, product)
+                  else axios.put(`http://localhost:9090/api/carts/${res1.data.id}/quantity/${res1.data.quantity + 1}`)
+                  setNofification('Đã thêm vào giỏ hàng.')
+                }).catch((error) => {
+                  console.log(error);
+                  setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');
+                });
+            } else {
+              setNofification('Mẫu màu đã hết. Vui lòng chọn loại màu khác!')
+            }
+          })
+          .catch((err) => {console.log(err)})
       } catch (error) {
         console.log(error);
         setAlertError('Đã xảy ra lỗi! Vui lòng thử lại.');

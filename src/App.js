@@ -32,6 +32,8 @@ function App() {
             <Route path='user/charge' element={<User />} />
             <Route path='user/purchase' element={<User />} />
             <Route path='user/transaction' element={<User />} />
+            <Route path='user/review' element={<User />} />
+            <Route path='user/review/history' element={<User />} />
             <Route path='search' element={<SearchResult />} />
             <Route path='*' element={<Home />} />
           </Route>

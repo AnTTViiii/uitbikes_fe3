@@ -12,6 +12,7 @@ const Inbox = () => {
     const [messages, setMessages] = useState([])
     const [chat, setChat] = useState([])
     const bottomRef = useRef(null)
+    const [isScrolling, setIsScrolling] = useState(false);
 
     useEffect(() => {
         axios.get(`http://localhost:9090/api/conversations/${user.username}`)
@@ -20,7 +21,7 @@ const Inbox = () => {
                 setMessages(res.data.messages)
             })
             .catch((err) => {console.log(err)})
-    }, [user.username, messages, bottomRef])
+    }, [user.username, messages])
 
     const textRef = useRef()
 
@@ -36,15 +37,38 @@ const Inbox = () => {
                 .then((res) => {
                     if (res.data === true) {
                         textRef.current.value = ''
+                        setIsScrolling(false)
                     }
                 })
                 .catch((err)=> {console.log(err)})
         }
     }
 
+    const handleScroll = () => {
+        // Detect whether the user is scrolling
+        if (bottomRef.current) {
+            const isAtBottom = bottomRef.current.getBoundingClientRect().bottom <= window.innerHeight;
+            setIsScrolling(!isAtBottom);
+        }
+    };
+
     useEffect(() => {
-        bottomRef.current?.scrollIntoView();
-    }, [messages, bottomRef])
+        // Add a scroll event listener to the conversation container
+        const conversationContainer = document.querySelector('.conversation');
+        conversationContainer.addEventListener('scroll', handleScroll);
+
+        return () => {
+            // Remove the event listener when the component unmounts
+            conversationContainer.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
+    useEffect(() => {
+        // Scroll to the bottom only if isScrolling is false
+        if (!isScrolling && bottomRef.current) {
+            bottomRef.current.scrollIntoView(isScrolling ? { behavior: 'smooth' } : {});
+        }
+    }, [messages, isScrolling])
 
     return (
         <div className='inbox'>
